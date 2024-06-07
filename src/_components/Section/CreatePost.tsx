@@ -42,8 +42,11 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
   const [heading, setHeading] = useState<number>(0);
   const [isEdit, setIsEdit] = useState<boolean>(true);
   const [isOpenTag, setIsOpenTag] = useState<boolean>(false);
+  const [isError, setIsError] = useState<string>("");
   const mutation = api.upload.uploadImage.useMutation();
   const mutationd = api.upload.deleteImage.useMutation();
+  const mutationp = api.post.createPost.useMutation();
+  
 
   const contentRef = useRef<HTMLTextAreaElement>(null);
 
@@ -121,7 +124,7 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
 
   // Handle image cover
   const [selectedImage, setSelectedImage] = useState<
-    string | ArrayBuffer | null
+    any
   >(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -342,8 +345,21 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
   };
 
   // handle submit
-  const handleSubmit = () => {
-    console.log({ title, content, tags, selectedImage });
+  const handleSubmit = async () => {
+    // console.log({ title, content, tags, selectedImage });
+    if (title == ""){
+      setIsError("title: can't be blank")
+    } else if(content == ""){
+      setIsError("content: can't be blank")
+    }else {
+      const response = await mutationp.mutateAsync({ title, content, tags, picturePost: selectedImage || null })
+      if(!response){
+        setIsError("post: can't be create")
+      }
+      console.log(response)
+      setIsError("")
+      Router.push
+    }
   };
 
   return (
@@ -381,6 +397,10 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
           // Create
           <>
             <div className="ml-[80px] h-[784px] w-[876.391px] overflow-hidden rounded-md bg-bg1 shadow-create-post">
+              {isError.length > 0 && <div className="p-4 mb-6 bg-bg-error">
+                <h1 className="mb-2 text-[#b91c1c] font-bold text-[18px]">Whoops, something went wrong:</h1>
+                <p>{isError}</p>
+              </div>}
               <div className="px-16 py-8">
                 {!selectedImage && (
                   <button

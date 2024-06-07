@@ -23,36 +23,21 @@ export const postRouter = createTRPCRouter({
     .input(z.object({
       title: z.string(),
       content: z.string(),
-      tags: z.array(z.string()).optional(),
-      picturePost: z.string().optional(),
+      tags: z.array(z.object({
+        id: z.number(),
+        name: z.string(),
+        color: z.string(),
+      })).optional(),
+      picturePost: z.string().nullable().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       const { title, content, tags, picturePost } = input;
       const userId = ctx.session.user.id;
-
-      const post = await ctx.db.post.create({
-        data: {
-          title,
-          content,
-          picturePost,
-          createdById: userId,
-          tags: {
-            create: tags?.map(tag => ({
-              tag: {
-                connectOrCreate: {
-                  where: { name: tag },
-                  create: { name: tag, color: "default-color" }
-                }
-              }
-            })) || [],
-          },
-        },
-        include: {
-          tags: true,
-        },
-      });
-
-      return post;
+      console.log("title: ", title)
+      console.log("content: ", content)
+      console.log("tags: ", tags)
+      console.log("picturePost: ", picturePost)
+      return {}
     }),
 
   getAllPosts: publicProcedure.query(async ({ ctx }) => {

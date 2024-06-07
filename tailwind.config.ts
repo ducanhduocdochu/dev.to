@@ -35,7 +35,9 @@ export default {
         'button3': 'rgba( 59, 73, 223 , 0.1)',
         'button4' :'rgb( 47, 58, 178 )',
         'button5' :'rgb(113, 113, 113)',
-        'button6' :'rgba(0, 0, 0, 0.035)'
+        'button6' :'rgba(0, 0, 0, 0.035)',
+        'bg-error' :'rgba(220, 38, 38, 0.1)',
+        
       },
       borderWidth: {
         'border-button': '0.888889px', 
