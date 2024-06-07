@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+}
+
+@layer components {
+    .placeholder-bold::placeholder {
+      @apply font-black;
+    }
+    .placeholder-font::placeholder {
+      @apply font-mono;
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  }
+  .placeholder-20::placeholder {
+    @apply text-[18px];
+}
+.placeholder-normal::placeholder {
+  @apply font-medium;
+}
+  }
+
+  
