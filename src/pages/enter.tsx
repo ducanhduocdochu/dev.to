@@ -48,10 +48,10 @@ export default function EnterPage() {
   };
 
   if (session) {
-    void router
-      .push("/?signin=true")
-      .then(() => {})
-      .catch((err) => console.error(err));
+    void router.push("/?signin=true").then(() => {
+      }).catch((error) => {
+        console.error("Error while navigating:", error);
+      });
     return null;
   }
 
