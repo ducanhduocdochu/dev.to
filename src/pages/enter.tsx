@@ -93,6 +93,14 @@ export default function EnterPage() {
     },
   ];
 
+  const hanldeRouteEnter = () => {
+    router.push("/enter").catch((err) => console.error(err));
+  }
+
+  const hanldeRouteEnter1 = () => {
+    router.push("/enter?state=new-user").catch((err) => console.error(err));
+  }
+
   return (
     <AuthLayout>
       <Head>
@@ -153,7 +161,7 @@ export default function EnterPage() {
           <div className="mt-12 text-center">
             Already have an account?{" "}
             <a
-              onClick={() => router.push("/enter")}
+              onClick={hanldeRouteEnter}
               className="cursor-pointer text-[#3b49df]"
             >
               Log in
@@ -164,7 +172,7 @@ export default function EnterPage() {
           <div className="mt-12 text-center">
             New to DEV Community?{" "}
             <a
-              onClick={() => router.push("/enter?state=new-user")}
+              onClick={hanldeRouteEnter1}
               className="cursor-pointer text-[#3b49df]"
             >
               Create account
