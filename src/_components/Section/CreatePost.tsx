@@ -363,6 +363,7 @@ const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
       }
       setIsError("");
       router.push(`${response?.createdById}/${response?.id}`).then(() => {
+        // Xử lý khi chuyển hướng thành công nếu cần
       }).catch((error) => {
         console.error("Error while navigating:", error);
       });

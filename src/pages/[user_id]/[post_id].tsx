@@ -42,13 +42,13 @@ export default function PostPage() {
     return null;
   }
 
-  if (error_post || error_user) {
-    return (
-      <div className="m-4 mt-0 flex w-header-w justify-between">
-        Error loading post | user
-      </div>
-    );
-  }
+  // if (error_post || error_user) {
+  //   return (
+  //     <div className="m-4 mt-0 flex w-header-w justify-between">
+  //       Error loading post | user
+  //     </div>
+  //   );
+  // }
 
   if (!data_post || !data_user) {
     return (
