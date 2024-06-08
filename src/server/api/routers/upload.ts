@@ -6,7 +6,6 @@ import cloudinary from "@/server/cloudinary";
 import fs from 'fs';
 import path from 'path';
 
-// Định nghĩa một kiểu cho kết quả trả về từ Cloudinary khi xóa hình ảnh
 interface CloudinaryDeleteResponse {
   result: string;
 }
@@ -67,8 +66,7 @@ export const uploadRouter = createTRPCRouter({
       const { public_id } = input;
 
       try {
-        // Gọi cloudinary.uploader.destroy và gán kết quả cho biến result với kiểu phù hợp
-        const result: CloudinaryDeleteResponse = await cloudinary.uploader.destroy(public_id);
+        const result = await cloudinary.uploader.destroy(public_id) as CloudinaryDeleteResponse;
 
         if (result.result !== 'ok') {
           throw new Error(`Error: Deletion failed for public_id ${public_id}`);
