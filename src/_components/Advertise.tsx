@@ -2,7 +2,16 @@ import { useRouter } from "next/router";
 import { FC } from "react";
 
 const Advertise: FC = () => {
-  const router = useRouter()
+  const router = useRouter();
+  
+  const handleClick = async () => {
+    try {
+      await router.push('https://docs.google.com/forms/d/e/1FAIpQLSfrhAb82gHqbmf4jWhay0MrkAZe7ZX092Sp7Doz0MQt1ic79w/viewform');
+    } catch (error) {
+      console.error('Navigation error:', error);
+    }
+  };
+
   return (
     <div>
       <h1 className="pb-4 text-[14px] font-normal leading-[25px] text-[#525252]">
@@ -15,13 +24,15 @@ const Advertise: FC = () => {
         height="3000"
         loading="lazy"
         className="mb-5"
-      ></img>
+      />
 
       <div className="inline-block text-[rgb(64, 64, 64)] mt-6 font-bold">
-        <div onClick = {() => {
-          router.push('https://docs.google.com/forms/d/e/1FAIpQLSfrhAb82gHqbmf4jWhay0MrkAZe7ZX092Sp7Doz0MQt1ic79w/viewform')
-          return null
-        }} className="inline-block text-button hover:text-button4 underline hover:cursor-pointer">Fill out this survey</div>
+        <div
+          onClick={handleClick}
+          className="inline-block text-button hover:text-button4 underline hover:cursor-pointer"
+        >
+          Fill out this survey
+        </div>
         {" "}
         and help us moderate our community by becoming a tag moderator here at
         DEV.

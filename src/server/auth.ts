@@ -43,7 +43,7 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(db) as Adapter,
+  adapter: PrismaAdapter(db), // Removed unnecessary type assertion
   providers: [
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,

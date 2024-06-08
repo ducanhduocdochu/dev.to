@@ -10,7 +10,7 @@ const PostWidgets: FC = () => {
     error: error_posts,
   } = api.post.getPostsPaginatedForBody.useQuery({ page: 1, pageSize: 10 });
 
-  const posts:PostTypeBody[] | null = data_posts? data_posts.posts : []
+  const posts: PostTypeBody[] = data_posts?.posts ?? [];
 
   const {
     data: data_tag,
@@ -22,7 +22,7 @@ const PostWidgets: FC = () => {
     <div>
       {posts.length > 0 && !isLoading_posts ? 
       posts.map((item: PostTypeBody) => {
-        return <Post key={item.id} postDetail={item} data_tag={data_tag || []} />;
+        return <Post key={item.id} postDetail={item} data_tag={data_tag ?? []} />;
       }) : <div>Loading...</div>}
     </div>
   );

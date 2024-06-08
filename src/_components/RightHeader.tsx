@@ -22,9 +22,8 @@ const RightHeader: FC = () => {
             type="primary"
             className=""
             classNameProp="w-[114.2px] mr-2 items-center justify-center !px-[14px]"
-            onClick={() => {
-              router.push('/new')
-              return null
+            onClick={async () => {
+              await router.push('/new');
             }}
           >
             Create Post
@@ -33,9 +32,8 @@ const RightHeader: FC = () => {
             type="secondary"
             className="mx-1"
             classNameProp="mr-2 items-center justify-center !p-2"
-            onClick={() => {
-              router.push('/notifications')
-              return null
+            onClick={async () => {
+              await router.push('/notifications');
             }}
           >
             <NotificationIcon />
@@ -48,10 +46,10 @@ const RightHeader: FC = () => {
               onClick={handleButtonClick}
             >
               <img
-                src={session.user.image || ""}
+                src={session.user.image ?? ""}
                 style={{ backgroundColor: "#dddddd;" }}
                 className="mr-2 h-[32px] w-[32px] rounded-full"
-                alt={session.user.name || ""}
+                alt={session.user.name ?? ""}
               ></img>
             </Button>
             {isMenuOpen && (
@@ -105,7 +103,9 @@ const RightHeader: FC = () => {
                     type="secondary"
                     className=""
                     classNameProp="flex-col h-[40px] px-4 py-2"
-                    onClick={signOut}
+                    onClick={async () => {
+                      await signOut();
+                    }}
                   >
                     Sign Out
                   </Button>
@@ -120,11 +120,9 @@ const RightHeader: FC = () => {
             type="secondary"
             className=""
             classNameProp="w-[75.653px] items-center mr-2 justify-center font-normal"
-            onClick={() => {
-              router.push("/enter")
-              return null
-            }
-            }
+            onClick={async () => {
+              await router.push("/enter");
+            }}
           >
             Log in
           </Button>
@@ -132,9 +130,8 @@ const RightHeader: FC = () => {
             type="primary"
             className=""
             classNameProp="w-[140px] mr-2 items-center justify-center !px-[14.7px]"
-            onClick={() => {
-              router.push("/enter?state=new-user")
-              return null
+            onClick={async () => {
+              await router.push("/enter?state=new-user");
             }}
           >
             Create account

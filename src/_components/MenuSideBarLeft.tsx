@@ -18,11 +18,11 @@ import { useRouter } from "next/router";
 interface MenuItem {
   text: string;
   link: string;
-  icon: FC<{}>;
+  icon: FC<Record<string, never>>;
 }
 
 const MenuSideBarLeft: FC = () => {
-  const router = useRouter()
+  const router = useRouter();
   const menu: MenuItem[] = [
     { text: "Home", link: "/", icon: HomeIcon },
     { text: "Podcasts", link: "/pod", icon: PodcastsIcon },
@@ -42,11 +42,21 @@ const MenuSideBarLeft: FC = () => {
   return (
     <div className="mb-4">
       {menu.map(item => (
-        <Button onClick={() => {
-          router.push(item.link)
-          return null
-        }} key={item.link} type='secondary' className="" classNameProp="w-[240px] items-center justify-start !pl-2">
-          <item.icon/>
+        <Button 
+          onClick={async () => {
+            try {
+              await router.push(item.link);
+            } catch (error) {
+              console.error('Failed to navigate:', error);
+            }
+            return null;
+          }} 
+          key={item.link} 
+          type='secondary' 
+          className="" 
+          classNameProp="w-[240px] items-center justify-start !pl-2"
+        >
+          <item.icon />
           <p className="ml-2">{item.text}</p>
         </Button>
       ))}

@@ -1,5 +1,3 @@
-// pages/about.tsx
-
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { FC } from "react";
@@ -13,13 +11,17 @@ const Logo: FC<Props> = ({ width, height }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   return (
-      <a onClick={()=> {
-        if (session){
-          router.push(`/?signin=true`);
-        }else{
-          router.push(`/`);
+      <a onClick={async () => {
+        try {
+          if (session) {
+            await router.push(`/?signin=true`);
+          } else {
+            await router.push(`/`);
+          }
+        } catch (error) {
+          console.error('Failed to navigate:', error);
         }
-        return null;;
+        return null;
       }}>
         <img
           className={`site-logo__img w-[${width}px] h-[${height}px] cursor-pointer`}

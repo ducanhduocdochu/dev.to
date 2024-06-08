@@ -16,6 +16,10 @@ import { api } from "@/utils/api";
 import Button from "./Button";
 import ThreeDotIcon from "./Icon/PostDetailIcon/ThreeDotIcon";
 
+interface UploadResponse {
+  image_url: string;
+}
+
 const CommentInput: FC<{ session: Session | null | undefined }> = ({ session }) => {
   const [isFocused, setIsFocused] = useState(false);
   const contentRef = useRef<HTMLTextAreaElement>(null);
@@ -163,7 +167,7 @@ const CommentInput: FC<{ session: Session | null | undefined }> = ({ session }) 
     }
   };
 
-  const handleImageChangeContent = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleImageChangeContent = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
@@ -177,7 +181,7 @@ const CommentInput: FC<{ session: Session | null | undefined }> = ({ session }) 
               file: base64String,
               fileName,
               contentType,
-            });
+            }) as UploadResponse;
             if (response) {
               const url = response.image_url;
               setContent(content + `![Image description](${url})`);

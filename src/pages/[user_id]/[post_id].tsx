@@ -19,9 +19,9 @@ export default function PostPage() {
   useEffect(() => {
     if (isNaN(postId)) {
       if (status === "authenticated") {
-        router.push("/?sign-in=true");
+        void router.push("/?sign-in=true");
       } else {
-        router.push("/");
+        void router.push("/");
       }
     }
   }, [postId, status, router]);
@@ -67,7 +67,7 @@ export default function PostPage() {
       </Head>
       <div className="m-4 mt-0 flex w-header-w justify-between">
         {!isLoading_post ? (
-          <Reaction detailPost={data_post.detailPost}/>
+          <Reaction detailPost={data_post.detailPost} />
         ) : (
           <div>Loading ...</div>
         )}
@@ -77,21 +77,21 @@ export default function PostPage() {
             detailPost={data_post.detailPost}
             post={data_post.post}
             data_user={data_user}
-            session={session || null} 
+            session={session ?? null}
           />
         ) : (
           <div>Loading ...</div>
         )}
 
-    {!isLoading_user && data_user ? (
-      <OtherDetailPost
-        data_user={data_user}
-        id={data_post.post.createdById}
-        session={session || null} 
-      />
-    ) : (
-      <div>Loading...</div>
-    )}
+        {!isLoading_user && data_user ? (
+          <OtherDetailPost
+            data_user={data_user}
+            id={data_post.post.createdById}
+            session={session ?? null}
+          />
+        ) : (
+          <div>Loading...</div>
+        )}
       </div>
     </MainLayout>
   );

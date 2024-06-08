@@ -4,8 +4,8 @@ import { TagType } from "@/typeProp";
 
 const Tag: FC<{ tag: TagType | undefined }> = ({ tag }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [backgroundColor, setBackgroundColor] = useState("white");
-  const [boxShadow, setBoxShadow] = useState("");
+  const [backgroundColor, setBackgroundColor] = useState<string | null>(null);
+  const [boxShadow, setBoxShadow] = useState<string>("");
 
   const handleMouseEnter = (color: string) => {
     setBackgroundColor(rgbToRgba(color, 0.1));
@@ -15,20 +15,21 @@ const Tag: FC<{ tag: TagType | undefined }> = ({ tag }) => {
     setIsHovered(true);
   };
 
-  const handleMouseLeave = (color: string) => {
-    setBackgroundColor("white");
+  const handleMouseLeave = () => {
+    setBackgroundColor(null);
     setBoxShadow("");
-    setIsHovered(true);
+    setIsHovered(false);
   };
+
   return (
     <div
       className="hover:text- flex items-center rounded-md !py-1 px-[7px] hover:no-underline"
       style={{
-        backgroundColor,
+        backgroundColor: backgroundColor ?? undefined,
         boxShadow,
       }}
-      onMouseEnter={() => handleMouseEnter(tag?.color || "")}
-      onMouseLeave={() => handleMouseLeave(tag?.color || "")}
+      onMouseEnter={() => handleMouseEnter(tag?.color ?? "")}
+      onMouseLeave={handleMouseLeave}
     >
       <div style={{ color: tag?.color }}>#</div>
       {tag?.name}

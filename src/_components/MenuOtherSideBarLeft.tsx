@@ -1,6 +1,4 @@
-// pages/about.tsx
-
-import { FC, useReducer } from "react";
+import { FC } from "react";
 import Button from "@/_components/Button";
 import CodeOfConductIcon from "@/_components/Icon/CodeOfConductIcon";
 import PrivacyPolicyIcon from "@/_components/Icon/PrivacyPolicyIcon";
@@ -16,11 +14,11 @@ import { useRouter } from "next/router";
 interface MenuItem {
   text: string;
   link: string;
-  icon: FC<{}>;
+  icon: FC<Record<string, never>>;
 }
 
 const MenuOtherSideBarLeft: FC = () => {
-  const router = useRouter()
+  const router = useRouter();
   const menu: MenuItem[] = [
     { text: "Code of Conduct", link: "/code-of-conduct", icon: CodeOfConductIcon },
     { text: "Privacy Policy", link: "/privacy", icon: PrivacyPolicyIcon },
@@ -42,13 +40,16 @@ const MenuOtherSideBarLeft: FC = () => {
       {menu.map((item) => (
         <Button
           key={item.link}
-          
           type="secondary"
           className=""
           classNameProp="w-[240px] justify-start !pl-[6px] items-center"
-          onClick={() => {
-            router.push(item.link)
-            return null
+          onClick={async () => {
+            try {
+              await router.push(item.link);
+            } catch (error) {
+              console.error('Failed to navigate:', error);
+            }
+            return null;
           }}
         >
           <item.icon />
@@ -59,9 +60,13 @@ const MenuOtherSideBarLeft: FC = () => {
         {menuSocial.map((item) => (
           <Button
             key={item.link}
-            onClick={() => {
-              router.push(item.link)
-              return null
+            onClick={async () => {
+              try {
+                await router.push(item.link);
+              } catch (error) {
+                console.error('Failed to navigate:', error);
+              }
+              return null;
             }}
             type="secondary"
             className=""

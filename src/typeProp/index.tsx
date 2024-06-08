@@ -20,19 +20,15 @@ export interface PostType {
   createdById: string;
 }
 
-export interface PostTypeTab extends PostType {
-  
+export interface PostTypeBody extends PostType {
+  tags: TagPostType[];
 }
 
-export interface PostTypeBody extends PostType{
-  tags: TagPostType[]
-}
-
-export interface PostTypeDetail extends PostType{
-  tags: TagPostType[]
+export interface PostTypeDetail extends PostType {
+  tags: TagPostType[];
   // comments: CommentType[]
-  reactions: ReactionType[]
-  saves: SaveType[]
+  reactions: ReactionType[];
+  saves: SaveType[];
 }
 
 export interface ReactionType {

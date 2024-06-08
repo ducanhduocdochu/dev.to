@@ -8,15 +8,15 @@ const Search: FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (searchTerm.trim() !== "") {
-      router.push(`/search?utf8=✓&q=${searchTerm}`);
+      await router.push(`/search?utf8=✓&q=${searchTerm}`);
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      handleSearch();
+      await handleSearch();
     }
   };
 

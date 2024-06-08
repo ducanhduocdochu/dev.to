@@ -5,14 +5,14 @@ import Box from "@/_components/Box";
 import TabBox from "@/_components/TabBox";
 import Tab from "@/_components/Tab";
 import { api } from "@/utils/api";
-import { PostTypeTab } from "@/typeProp";
+import { PostType } from "@/typeProp";
 
 export type Tab = {
   id: number;
   title: string;
   sub: string;
   isLoading: boolean;
-  posts: PostTypeTab[];
+  posts: PostType[];
 };
 
 const SideBarRight: FC = () => {

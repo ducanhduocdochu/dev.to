@@ -9,9 +9,17 @@ export default function NotificationsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!session && status !== "loading") {
-      router.push("/");
-    }
+    const handleRedirect = async () => {
+      if (!session && status !== "loading") {
+        try {
+          await router.push("/");
+        } catch (error) {
+          console.error("Failed to redirect:", error);
+        }
+      }
+    };
+
+    handleRedirect();
   }, [session, status, router]);
 
   if (!session) {

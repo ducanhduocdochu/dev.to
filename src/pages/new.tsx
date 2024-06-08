@@ -18,12 +18,14 @@ export default function NewPage() {
     error: error_tags,
   } = api.tag.getAll.useQuery();
 
-  const data_tags: TagType[] | undefined = all_tag
+  const data_tags: TagType[] | undefined = all_tag;
   const router = useRouter();
 
   useEffect(() => {
     if (!session && status !== "loading") {
-      router.push("/");
+      router.push("/").catch((error) => {
+        console.error("Failed to redirect:", error);
+      });
     }
   }, [session, status, router]);
 

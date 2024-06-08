@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import Button from "@/_components/Button";
 import { api } from "@/utils/api";
 import { TagType } from "@/typeProp";
@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 
 const MenuTag: FC = () => {
   const { data: tags, isLoading, error } = api.tag.getAll.useQuery();
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <div className="mb-6">
@@ -22,9 +22,13 @@ const MenuTag: FC = () => {
                 type="secondary"
                 className=""
                 classNameProp="justify-start items-center"
-                onClick={() => {
-                  router.push("/tags")
-                  return null
+                onClick={async () => {
+                  try {
+                    await router.push("/tags");
+                  } catch (error) {
+                    console.error('Failed to navigate:', error);
+                  }
+                  return null;
                 }}
               >
                 <p className="ml-2">#{tag.name}</p>

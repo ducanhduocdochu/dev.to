@@ -67,7 +67,7 @@ const initialList: BarProps[] = [
   },
 ];
 
-const handleSetItem = (
+const handleSetItem = async (
   link: string,
   id: number,
   elementId: number | undefined,
@@ -75,27 +75,30 @@ const handleSetItem = (
   setItems: React.Dispatch<React.SetStateAction<BarProps[]>>,
   router: ReturnType<typeof useRouter>
 ) => {
-  router.push(link);
-
-  setItems((prev) =>
-    prev.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          isChoose: true,
-          elements: item.elements.map((element) => {
-            if (element.id === elementId) {
-              return { ...element, isChoose: true };
-            } else {
-              return { ...element, isChoose: false };
-            }
-          }),
-        };
-      } else {
-        return { ...item, isChoose: false };
-      }
-    })
-  );
+  try {
+    await router.push(link);
+    setItems((prev) =>
+      prev.map((item) => {
+        if (item.id === id) {
+          return {
+            ...item,
+            isChoose: true,
+            elements: item.elements.map((element) => {
+              if (element.id === elementId) {
+                return { ...element, isChoose: true };
+              } else {
+                return { ...element, isChoose: false };
+              }
+            }),
+          };
+        } else {
+          return { ...item, isChoose: false };
+        }
+      })
+    );
+  } catch (error) {
+    console.error('Navigation error:', error);
+  }
 };
 
 const Bar: FC = () => {

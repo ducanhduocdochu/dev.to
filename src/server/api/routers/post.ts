@@ -85,14 +85,16 @@ export const postRouter = createTRPCRouter({
         },
       });
 
-      tags?.forEach(async (item) => {
-        await ctx.db.postTags.create({
-          data: {
-            tagId: item.id,
-            postId: post.id,
-          },
-        });
-      });
+      if (tags) {
+        await Promise.all(tags.map(async (item) => {
+          await ctx.db.postTags.create({
+            data: {
+              tagId: item.id,
+              postId: post.id,
+            },
+          });
+        }));
+      }
 
       return ctx.db.post.findUnique({
         where: { id: post.id },
