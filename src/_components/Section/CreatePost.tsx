@@ -34,8 +34,10 @@ export type ButtonPostType = {
   onClick: () => void;
 };
 
-const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
-  const router = useRouter()
+const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
+  data_tags,
+}) => {
+  const router = useRouter();
   const [title, setTitle] = useState<string>("");
   const [idPicture, setIdPicture] = useState<string>("");
   const [content, setContent] = useState<string>("");
@@ -48,7 +50,6 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
   const mutation = api.upload.uploadImage.useMutation();
   const mutationd = api.upload.deleteImage.useMutation();
   const mutationp = api.post.createPost.useMutation();
-  
 
   const contentRef = useRef<HTMLTextAreaElement>(null);
 
@@ -125,9 +126,7 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
   };
 
   // Handle image cover
-  const [selectedImage, setSelectedImage] = useState<
-    any
-  >(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -137,17 +136,17 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
 
   const handleRemoveImage = async () => {
     try {
-        const response = await mutationd.mutateAsync({ public_id: idPicture });
+      const response = await mutationd.mutateAsync({ public_id: idPicture });
 
-        if (response.message === 'Image deleted successfully') {
-            setSelectedImage(null);
-            if (fileInputRef.current) {
-                fileInputRef.current.value = "";
-                setIdPicture("")
-            }
+      if (response.message === "Image deleted successfully") {
+        setSelectedImage(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+          setIdPicture("");
         }
+      }
     } catch (error) {
-        console.error("Failed to delete image:", error);
+      console.error("Failed to delete image:", error);
     }
   };
 
@@ -165,30 +164,30 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
   const handleImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-        const reader = new FileReader();
-        reader.onloadend = async () => {
-            const base64String = reader.result?.toString().split(',')[1];
-            if (base64String) {
-                const fileName = file.name;
-                const contentType = file.type;
-                try {
-                    const response = await mutation.mutateAsync({
-                        file: base64String,
-                        fileName,
-                        contentType,
-                    });
-                    if (response) {
-                        setIdPicture(response.public_id)
-                        setSelectedImage(response.image_url);
-                    }
-                } catch (error) {
-                    console.error("Upload failed:", error);
-                }
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const base64String = reader.result?.toString().split(",")[1];
+        if (base64String) {
+          const fileName = file.name;
+          const contentType = file.type;
+          try {
+            const response = await mutation.mutateAsync({
+              file: base64String,
+              fileName,
+              contentType,
+            });
+            if (response) {
+              setIdPicture(response.public_id);
+              setSelectedImage(response.image_url);
             }
-        };
-        reader.readAsDataURL(file);
+          } catch (error) {
+            console.error("Upload failed:", error);
+          }
+        }
+      };
+      reader.readAsDataURL(file);
     }
-};
+  };
 
   // Handle image content
   const [selectedImageContent, setSelectedImageContent] = useState<
@@ -209,24 +208,24 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = async () => {
-        const base64String = reader.result?.toString().split(',')[1];
+        const base64String = reader.result?.toString().split(",")[1];
         if (base64String) {
           const fileName = file.name;
           const contentType = file.type;
           try {
-              const response = await mutation.mutateAsync({
-                  file: base64String,
-                  fileName,
-                  contentType,
-              });
-              if (response) {
-                const url = response.image_url
-                setContent(content + `![Image description](${url})`);
-              }
+            const response = await mutation.mutateAsync({
+              file: base64String,
+              fileName,
+              contentType,
+            });
+            if (response) {
+              const url = response.image_url;
+              setContent(content + `![Image description](${url})`);
+            }
           } catch (error) {
-              console.error("Upload failed:", error);
+            console.error("Upload failed:", error);
           }
-      }
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -328,10 +327,10 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
     setTip(2);
     setIsOpenTag(true);
   };
-  const handleTagsBlur = (e: any) => {
-    if (e.relatedTarget) return;
-    // setIsOpenTag(false)
-  };
+  // const handleTagsBlur = (e: any) => {
+  //   if (e.relatedTarget) return;
+  //   // setIsOpenTag(false)
+  // };
 
   // handle tag
   const handleAddTag = (tag: TagType) => {
@@ -348,17 +347,22 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
 
   // handle submit
   const handleSubmit = async () => {
-    if (title == ""){
-      setIsError("title: can't be blank")
-    } else if(content == ""){
-      setIsError("content: can't be blank")
-    }else {
-      const response = await mutationp.mutateAsync({ title, content, tags, picturePost: selectedImage || null })
-      if(!response){
-        setIsError("post: can't be create")
+    if (title == "") {
+      setIsError("title: can't be blank");
+    } else if (content == "") {
+      setIsError("content: can't be blank");
+    } else {
+      const response = await mutationp.mutateAsync({
+        title,
+        content,
+        tags,
+        picturePost: selectedImage || null,
+      });
+      if (!response) {
+        setIsError("post: can't be create");
       }
-      setIsError("")
-      router.push(`${response?.createdById}/${response?.id}`)
+      setIsError("");
+      router.push(`${response?.createdById}/${response?.id}`);
     }
   };
 
@@ -397,10 +401,14 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
           // Create
           <>
             <div className="ml-[80px] h-[784px] w-[876.391px] overflow-hidden rounded-md bg-bg1 shadow-create-post">
-              {isError.length > 0 && <div className="p-4 mb-6 bg-bg-error">
-                <h1 className="mb-2 text-[#b91c1c] font-bold text-[18px]">Whoops, something went wrong:</h1>
-                <p>{isError}</p>
-              </div>}
+              {isError.length > 0 && (
+                <div className="mb-6 bg-bg-error p-4">
+                  <h1 className="mb-2 text-[18px] font-bold text-[#b91c1c]">
+                    Whoops, something went wrong:
+                  </h1>
+                  <p>{isError}</p>
+                </div>
+              )}
               <div className="px-16 py-8">
                 {!selectedImage && (
                   <button
@@ -464,7 +472,10 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
                   <div className="flex">
                     <div className="flex">
                       {tags.map((tag) => (
-                        <div className="mr-2 flex items-center rounded-md bg-bg2 px-2">
+                        <div
+                          key={tag.name}
+                          className="mr-2 flex items-center rounded-md bg-bg2 px-2"
+                        >
                           #{tag.name}
                           <Button
                             type="secondary"
@@ -491,7 +502,6 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
                     value={""}
                     onChange={handleTagsChange}
                     onFocus={handleTagsFocus}
-                    onBlur={handleTagsBlur}
                   />
                 )}
 
@@ -504,6 +514,7 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
                       {data_tags?.map((tag) => {
                         return (
                           <Button
+                            key={tag.name}
                             onClick={() => handleAddTag(tag)}
                             type="secondary"
                             className="my-1"
@@ -522,6 +533,7 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
                 <div className="flex">
                   {buttons.map((item) => (
                     <Button
+                      key={item.id}
                       onClick={item.onClick}
                       type="secondary"
                       className=""
@@ -579,7 +591,9 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
               {tags.length > 0 && (
                 <div className="flex px-16">
                   {tags.map((item) => (
-                    <div className="px-2 py-1">#{item.name}</div>
+                    <div key={tag.name} className="px-2 py-1">
+                      #{item.name}
+                    </div>
                   ))}
                 </div>
               )}
@@ -677,7 +691,7 @@ const EditorBasics: React.FC = () => {
           complete URL:
           <code className="rounded bg-gray-300 p-1 text-[12px] text-gray-700">
             {""}
-            {`{% embed https://... %}`}
+            {"{% embed https://... %}"}
           </code>
           .
           <a href="#" className="ml-1 text-blue-500 no-underline">
