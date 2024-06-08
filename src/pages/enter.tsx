@@ -27,9 +27,32 @@ export default function EnterPage() {
 
   const { data: session, status } = useSession();
 
+  const handleSignIn = async (title: string) => {
+    try {
+      await signIn(title.toLowerCase());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handlePrivacyPolicy = () => {
+    router.push("/privacy").catch((err) => console.error(err));
+  };
+
+  const handleTerms = () => {
+    router.push("/terms").catch((err) => console.error(err));
+  };
+
+  const handleCodeOfConduct = () => {
+    router.push("/code-of-conduct").catch((err) => console.error(err));
+  };
+
   if (session) {
-    void router.push("/?signin=true").then(() => {}).catch(err => console.error(err));
-    return null; 
+    void router
+      .push("/?signin=true")
+      .then(() => {})
+      .catch((err) => console.error(err));
+    return null;
   }
 
   const authButton: AuthButtonType[] = [
@@ -92,7 +115,7 @@ export default function EnterPage() {
               type="secondary"
               className=""
               classNameProp="w-[544px] h-[50px] !p-3 mb-3 !text-[14px] !font-medium !text-[#171717] !border-[rgb(212, 212, 212)] !border hover:no-underline hover:!bg-[rgb(245,245,245)]"
-              onClick={() => void signIn(item.title.toLowerCase()).then(() => {}).catch(err => console.error(err))}
+              onClick={() => handleSignIn(item.title)}
             >
               <item.icon />
               <p className="flex w-[495px] justify-center">
@@ -103,25 +126,50 @@ export default function EnterPage() {
         </div>
         <div className="w-[544px] px-[64px] text-center text-[14px] italic text-text2">
           By signing up, you are agreeing to our
-          <a onClick={() => {
-            router.push("/privacy").then(() => {}).catch(err => console.error(err));
-            }} className="inline cursor-pointer text-[#3b49df]"> privacy policy</a>,{" "}
-          <a onClick={() => {router.push("/terms").then(() => {}).catch(err => console.error(err));}} className="inline cursor-pointer text-[#3b49df]">terms of use</a> and{" "}
-          <a onClick={() => {router.push("/code-of-conduct").then(() => {}).catch(err => console.error(err));}} className="inline cursor-pointer text-[#3b49df]">code of conduct</a>.
+          <a
+            onClick={handlePrivacyPolicy}
+            className="inline cursor-pointer text-[#3b49df]"
+          >
+            {" "}
+            privacy policy
+          </a>
+          ,{" "}
+          <a
+            onClick={handleTerms}
+            className="inline cursor-pointer text-[#3b49df]"
+          >
+            terms of use
+          </a>{" "}
+          and{" "}
+          <a
+            onClick={handleCodeOfConduct}
+            className="inline cursor-pointer text-[#3b49df]"
+          >
+            code of conduct
+          </a>
+          .
         </div>
         {state === "new-user" ? (
           <div className="mt-12 text-center">
             Already have an account?{" "}
-            <a onClick={() => {router.push("/enter").then(() => {}).catch(err => console.error(err));}} className="cursor-pointer text-[#3b49df]">
+            <a
+              onClick={() => router.push("/enter")}
+              className="cursor-pointer text-[#3b49df]"
+            >
               Log in
-            </a>.
+            </a>
+            .
           </div>
         ) : (
           <div className="mt-12 text-center">
             New to DEV Community?{" "}
-            <a onClick={() => {router.push("/enter?state=new-user").then(() => {}).catch(err => console.error(err));}} className="cursor-pointer text-[#3b49df]">
+            <a
+              onClick={() => router.push("/enter?state=new-user")}
+              className="cursor-pointer text-[#3b49df]"
+            >
               Create account
-            </a>.
+            </a>
+            .
           </div>
         )}
       </div>
