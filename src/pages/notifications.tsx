@@ -18,7 +18,7 @@ export default function NotificationsPage() {
       }
     };
 
-    // Chờ đợi cho router.push hoàn thành
+    // Wait for router.push to complete
     handleRedirect();
   }, [session, status, router]);
 

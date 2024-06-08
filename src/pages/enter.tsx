@@ -95,11 +95,11 @@ export default function EnterPage() {
 
   const hanldeRouteEnter = () => {
     router.push("/enter").catch((err) => console.error(err));
-  }
-
+  };
+  
   const hanldeRouteEnter1 = () => {
     router.push("/enter?state=new-user").catch((err) => console.error(err));
-  }
+  };
 
   return (
     <AuthLayout>
