@@ -53,8 +53,7 @@ export const uploadRouter = createTRPCRouter({
           public_id: result.public_id
         };
       } catch (err) {
-        console.error("Upload failed:", err);
-        throw new Error("Failed to upload image");
+        throw err;
       }
     }),
 
