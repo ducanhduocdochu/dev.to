@@ -26,12 +26,17 @@ export const uploadRouter = createTRPCRouter({
       const userId = ctx.session.user.id;
       const userName = ctx.session.user.name;
       const buffer = Buffer.from(file, 'base64');
-      const tempFilePath = path.join(__dirname, `temp_${fileName}`);
+      const tempFilePath = path.join('/tmp', `temp_${fileName}`);
       const folderName = `${userId}_${userName}_avatar`;
 
       try {
+        // Ensure the temporary directory exists
+        await fs.promises.mkdir('/tmp', { recursive: true });
+
+        // Write the buffer to a temporary file
         await fs.promises.writeFile(tempFilePath, buffer);
 
+        // Upload the temporary file to Cloudinary
         const result = await cloudinary.uploader.upload(tempFilePath, {
           public_id: 'avatar',
           folder: folderName
@@ -41,6 +46,7 @@ export const uploadRouter = createTRPCRouter({
           throw new Error("Error: Upload failed");
         }
 
+        // Delete the temporary file
         await fs.promises.unlink(tempFilePath);
 
         return {
@@ -53,6 +59,8 @@ export const uploadRouter = createTRPCRouter({
           public_id: result.public_id
         };
       } catch (err) {
+        // Attempt to delete the temporary file if an error occurs
+        await fs.promises.unlink(tempFilePath).catch(() => {});
         throw err;
       }
     }),
