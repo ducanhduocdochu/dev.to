@@ -22,7 +22,7 @@ import CommentInput from "../CommentInput";
 import CommentDetailWidget from "../CommentDetailWidget";
 import ImpressionWidget from "../ImpressionWidget";
 import { api } from "@/utils/api";
-import { PostTypeDetail, TagType } from "@/typeProp";
+import { PostTypeDetail, TagPostType, TagType } from "@/typeProp";
 
 type PostDetailProps = {
   detailPost: detailPostType;
@@ -52,7 +52,7 @@ const PostDetail: FC<PostDetailProps> = ({
     <div className="w-[876.391px]">
       <Box classNameProp="w-[876.391px] !p-0 overflow-hidden mb-4">
         <img
-          src={post.picturePost || ""}
+          src={post.picturePost ?? ""}
           alt={post.title}
           className="h-[368.078px] w-[876.391px]"
         />
@@ -60,10 +60,10 @@ const PostDetail: FC<PostDetailProps> = ({
           <div className="mb-[10px] flex h-[32px] items-center">
             <Button type="secondary" className="" classNameProp="!p-0 h-max">
               <img
-                src={data_user.image || ""}
+                src={data_user.image ?? ""}
                 style={{ backgroundColor: "#dddddd;" }}
                 className="mr-2 h-[32px] w-[32px] rounded-full"
-                alt={data_user.name || ""}
+                alt={data_user.name ?? ""}
               />
             </Button>
             <div className="pl-[12px]">
@@ -112,7 +112,7 @@ const PostDetail: FC<PostDetailProps> = ({
           </h2>
 
           <div className="mt-5 flex">
-            {post.tags.map((tag: any) => {
+            {post.tags.map((tag: TagPostType) => {
               const chooseTag = handleChooseTag(tag.tagId);
               return (
                 <Button
