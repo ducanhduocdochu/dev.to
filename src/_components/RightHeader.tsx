@@ -53,7 +53,7 @@ const RightHeader: FC = () => {
               ></img>
             </Button>
             {isMenuOpen && (
-              <Box classNameProp="absolute top-[40px] right-[4px] bg-white shadow-md border border-gray-200 rounded-md w-[250px] h-[306px] px-2 py-2">
+              <Box classNameProp="absolute top-[40px] right-[4px] bg-white shadow-md border border-gray-200 rounded-md w-[250px] h-[306px] px-2 py-2 z-99">
                 <div className="border-b-[rgb(214, 214, 215)] border-b pb-2">
                   <Button
                     type="secondary"
