@@ -161,6 +161,8 @@ const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
   //   }
   // };
 
+  const [isUpload, setIsUpload] = useState<boolean>(false)
+
   const handleImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -171,12 +173,14 @@ const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
           const fileName = file.name;
           const contentType = file.type;
           try {
+            setIsUpload(true)
             const response = await mutation.mutateAsync({
               file: base64String,
               fileName,
               contentType,
             });
             if (response) {
+              setIsUpload(false)
               setIdPicture(response.public_id);
               setSelectedImage(response.image_url);
             }
@@ -363,7 +367,6 @@ const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
       }
       setIsError("");
       router.push(`${response?.createdById}/${response?.id}`).then(() => {
-        // Xử lý khi chuyển hướng thành công nếu cần
       }).catch((error) => {
         console.error("Error while navigating:", error);
       });
@@ -422,6 +425,7 @@ const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
                     Add a cover image
                   </button>
                 )}
+                {isUpload && <div>Loading ...</div>}
                 <input
                   type="file"
                   accept="image/*"
