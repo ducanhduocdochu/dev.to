@@ -10,25 +10,17 @@ import ExplodingHeadIcon from "../Icon/PostDetailIcon/ExplodingHeadIcon";
 import RaiseHandIcon from "../Icon/PostDetailIcon/RaiseHandIcon";
 import FireIcon from "../Icon/PostDetailIcon/FireIcon";
 
-interface PropType {
-  heart_reaction: number;
-  unicorn_reaction: number;
-  exploding_reaction: number;
-  raisehand_reaction: number;
-  fire_reaction: number;
-  quantity_comment: number;
-  quantity_save: number;
-}
+export type detailPostType = {
+  quantityComment: number;
+  quantitySave: number;
+  quantityHeart: number;
+  quantityUnicorn: number;
+  quantityExploding: number;
+  quantityRaiseHand: number;
+  quantityFire: number;
+};
 
-const Reaction: FC<PropType> = ({
-  heart_reaction,
-  unicorn_reaction,
-  exploding_reaction,
-  raisehand_reaction,
-  fire_reaction,
-  quantity_comment,
-  quantity_save,
-}) => {
+const Reaction: FC<{detailPost:detailPostType}> = ({detailPost}) => {
   const [showMenu, setShowMenu] = useState(false);
   const [iconColor, setIconColor] = useState("#525252");
 
@@ -57,19 +49,15 @@ const Reaction: FC<PropType> = ({
           <ReactionIcon color={iconColor} />
         </Button>
         <p className="text-[14px]">
-          {heart_reaction +
-            unicorn_reaction +
-            exploding_reaction +
-            raisehand_reaction +
-            fire_reaction}
+          {detailPost.quantityHeart + detailPost.quantityUnicorn + detailPost.quantityExploding + detailPost.quantityRaiseHand + detailPost.quantityFire} 
         </p>
         {showMenu && (
-          <div className="absolute left-9 top-0 shadow-md px-2 py-2 rounded flex w-max rounded-[30px]">
-            <Button type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><HeartIcon size={36}/>{heart_reaction}</Button>
-            <Button type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><UnicornIcon size={36}/>{heart_reaction}</Button>
-            <Button type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><ExplodingHeadIcon size={36}/>{heart_reaction}</Button>
-            <Button type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><RaiseHandIcon size={36}/>{heart_reaction}</Button>
-            <Button type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><FireIcon size={36}/>{heart_reaction}</Button>
+          <div className="absolute bg-bg1 left-9 top-0 shadow-md px-2 py-2 rounded flex w-max rounded-[30px]">
+            <Button type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><HeartIcon size={36}/>{detailPost.quantityHeart}</Button>
+            <Button type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><UnicornIcon size={36}/>{detailPost.quantityUnicorn}</Button>
+            <Button type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><ExplodingHeadIcon size={36}/>{detailPost.quantityExploding}</Button>
+            <Button type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><RaiseHandIcon size={36}/>{detailPost.quantityRaiseHand}</Button>
+            <Button type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><FireIcon size={36}/>{detailPost.quantityFire}</Button>
           </div>
         )}
       </div>
@@ -81,7 +69,7 @@ const Reaction: FC<PropType> = ({
         >
           <CommentIcon />
         </Button>
-        <p className="text-[14px]">{quantity_comment}</p>
+        <p className="text-[14px]">{detailPost.quantityComment}</p>
       </div>
       <div className="flex flex-col items-center mb-[17px]">
         <Button
@@ -91,7 +79,7 @@ const Reaction: FC<PropType> = ({
         >
           <SaveIcon />
         </Button>
-        <p className="text-[14px]">{quantity_save}</p>
+        <p className="text-[14px]">{detailPost.quantitySave}</p>
       </div>
       <div className="flex flex-col items-center">
         <Button

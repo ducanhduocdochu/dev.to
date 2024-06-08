@@ -28,6 +28,20 @@ export interface PostTypeBody extends PostType{
   tags: TagPostType[]
 }
 
+export interface PostTypeDetail extends PostType{
+  tags: TagPostType[]
+  // comments: CommentType[]
+  reactions: ReactionType[]
+  saves: SaveType[]
+}
+
+export interface ReactionType {
+  id: number;
+  userId: string;
+  postId: string;
+  reactTypeId: string;
+}
+
 export interface HeartReactionType {
   id: number;
   userId: string;

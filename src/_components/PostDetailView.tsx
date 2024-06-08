@@ -24,6 +24,7 @@ const PostDetailView: FC<PostDetailViewProps> = ({ content }) => {
       .replace(/^> (.*)$/gm, '<blockquote class="border-l-4 border-solid border-[rgb(229, 231, 235)] pl-5">$1</blockquote>')
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
       .replace(/_(.*?)_/g, "<em>$1</em>")
+      .replace(/_(.```?)_/g, "<div class='bg-black text-white'>$1<div>")
       .replace(/\n/g, "<br />");
 
     const finalText = replacedText.replace(/LINKPLACEHOLDER(\d+)/g, (match, index) => links[Number(index)]);

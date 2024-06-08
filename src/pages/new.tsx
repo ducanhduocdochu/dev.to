@@ -30,8 +30,6 @@ export default function NewPage() {
   if (!session) {
     return null;
   }
-
-  
   
   return (
       <div className="relative flex w-screen items-center justify-center bg-bg2">

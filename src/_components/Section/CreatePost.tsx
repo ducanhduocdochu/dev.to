@@ -25,8 +25,9 @@ import Box from "../Box";
 import CloseIcon from "../Icon/CloseIcon";
 import { TagType } from "@/typeProp";
 import { api } from "@/utils/api";
+import { useRouter } from "next/router";
 
-type ButtonPostType = {
+export type ButtonPostType = {
   id: number;
   icon: ElementType;
   link: string;
@@ -34,6 +35,7 @@ type ButtonPostType = {
 };
 
 const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
+  const router = useRouter()
   const [title, setTitle] = useState<string>("");
   const [idPicture, setIdPicture] = useState<string>("");
   const [content, setContent] = useState<string>("");
@@ -346,7 +348,6 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
 
   // handle submit
   const handleSubmit = async () => {
-    // console.log({ title, content, tags, selectedImage });
     if (title == ""){
       setIsError("title: can't be blank")
     } else if(content == ""){
@@ -356,9 +357,8 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
       if(!response){
         setIsError("post: can't be create")
       }
-      console.log(response)
       setIsError("")
-      Router.push
+      router.push(`${response?.createdById}/${response?.id}`)
     }
   };
 
@@ -488,7 +488,7 @@ const CreatePost: FC<{data_tags: TagType[] | undefined}> = ({data_tags}) => {
                     className="mb-0 ml-[2px] mt-[3px] w-full rounded-md border border-0 border-gray-300 focus:outline-none"
                     type="text"
                     placeholder="Add up to 4 tags..."
-                    // value={tag}
+                    value={""}
                     onChange={handleTagsChange}
                     onFocus={handleTagsFocus}
                     onBlur={handleTagsBlur}

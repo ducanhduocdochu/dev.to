@@ -7,7 +7,7 @@ import Tab from "@/_components/Tab";
 import { api } from "@/utils/api";
 import { PostTypeTab } from "@/typeProp";
 
-type Tab = {
+export type Tab = {
   id: number;
   title: string;
   sub: string;
