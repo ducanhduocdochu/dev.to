@@ -60,7 +60,7 @@ export const uploadRouter = createTRPCRouter({
         };
       } catch (err) {
         // Attempt to delete the temporary file if an error occurs
-        await fs.promises.unlink(tempFilePath).catch(() => {});
+        await fs.promises.unlink(tempFilePath).catch((err) => {console.log(err)});
         throw err;
       }
     }),
@@ -84,8 +84,7 @@ export const uploadRouter = createTRPCRouter({
           public_id: public_id
         };
       } catch (err) {
-        console.error("Deletion failed:", err);
-        throw new Error("Failed to delete image");
+        throw err
       }
     }),
 });
