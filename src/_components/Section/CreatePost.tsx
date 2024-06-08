@@ -407,7 +407,7 @@ const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
           // Create
           <>
             <div className="ml-[80px] h-[784px] w-[876.391px] overflow-hidden rounded-md bg-bg1 shadow-create-post">
-              {isError.length > 0 && (
+              {isError !== "" && (
                 <div className="mb-6 bg-bg-error p-4">
                   <h1 className="mb-2 text-[18px] font-bold text-[#b91c1c]">
                     Whoops, something went wrong:
