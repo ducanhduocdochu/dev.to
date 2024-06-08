@@ -30,6 +30,8 @@ export const env = createEnv({
     AWS_BUCKET_ACCESS_KEY: z.string(),
     AWS_BUCKET_SECRET_KEY: z.string(),
     AWS_BUCKET_REGION: z.string(),
+    CLOUDINARY_CLOUD_NAME: z.string(),
+    CLOUDINARY_API_KEY: z.string(),
     CLOUDINARY_API_SECRET: z.string()
   },
 
@@ -59,6 +61,8 @@ export const env = createEnv({
     AWS_BUCKET_REGION: process.env.AWS_BUCKET_REGION,
     AWS_BUCKET_ACCESS_KEY: process.env.AWS_BUCKET_ACCESS_KEY,
     AWS_BUCKET_SECRET_KEY: process.env.AWS_BUCKET_SECRET_KEY,
+    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET
   },
   /**

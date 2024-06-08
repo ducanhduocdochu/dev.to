@@ -16,7 +16,7 @@ CREATE TABLE `Post` (
     `readingTime` INTEGER NOT NULL,
     `picturePost` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
+    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `createdById` VARCHAR(191) NOT NULL,
 
     INDEX `Post_title_idx`(`title`),
@@ -24,46 +24,20 @@ CREATE TABLE `Post` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `HeartReaction` (
+CREATE TABLE `ReactionType` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `userId` VARCHAR(191) NOT NULL,
-    `postId` INTEGER NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
 
+    UNIQUE INDEX `ReactionType_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `UnicornReaction` (
+CREATE TABLE `Reaction` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` VARCHAR(191) NOT NULL,
     `postId` INTEGER NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `ExplodingReaction` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `userId` VARCHAR(191) NOT NULL,
-    `postId` INTEGER NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `RaisehandReaction` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `userId` VARCHAR(191) NOT NULL,
-    `postId` INTEGER NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `FireReaction` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `userId` VARCHAR(191) NOT NULL,
-    `postId` INTEGER NOT NULL,
+    `reactTypeId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -126,7 +100,6 @@ CREATE TABLE `User` (
     `email` VARCHAR(191) NULL,
     `emailVerified` DATETIME(3) NULL,
     `image` VARCHAR(191) NULL,
-    `provider` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `User_email_key`(`email`),
     PRIMARY KEY (`id`)
@@ -154,19 +127,10 @@ CREATE TABLE `PostTags` (
 ALTER TABLE `Post` ADD CONSTRAINT `Post_createdById_fkey` FOREIGN KEY (`createdById`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `HeartReaction` ADD CONSTRAINT `HeartReaction_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `Post`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Reaction` ADD CONSTRAINT `Reaction_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `Post`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `UnicornReaction` ADD CONSTRAINT `UnicornReaction_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `Post`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `ExplodingReaction` ADD CONSTRAINT `ExplodingReaction_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `Post`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `RaisehandReaction` ADD CONSTRAINT `RaisehandReaction_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `Post`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `FireReaction` ADD CONSTRAINT `FireReaction_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `Post`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Reaction` ADD CONSTRAINT `Reaction_reactTypeId_fkey` FOREIGN KEY (`reactTypeId`) REFERENCES `ReactionType`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Comment` ADD CONSTRAINT `Comment_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `Post`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
