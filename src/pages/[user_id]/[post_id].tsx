@@ -77,7 +77,7 @@ export default function PostPage() {
             detailPost={data_post.detailPost}
             post={data_post.post}
             data_user={data_user}
-            session={session ?? null} // Using nullish coalescing operator
+            session={session ?? null} // Sử dụng toán tử ?? thay vì ||
           />
         ) : (
           <div>Loading ...</div>
@@ -87,7 +87,7 @@ export default function PostPage() {
           <OtherDetailPost
             data_user={data_user}
             id={data_post.post.createdById}
-            session={session ?? null} // Using nullish coalescing operator
+            session={session ?? null} // Sử dụng toán tử ?? thay vì ||
           />
         ) : (
           <div>Loading...</div>

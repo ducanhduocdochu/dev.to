@@ -18,6 +18,7 @@ export default function NotificationsPage() {
       }
     };
 
+    // Phải sử dụng await hoặc .then để xử lý kết quả của router.push
     handleRedirect();
   }, [session, status, router]);
 
