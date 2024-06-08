@@ -591,7 +591,7 @@ const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
               {tags.length > 0 && (
                 <div className="flex px-16">
                   {tags.map((item) => (
-                    <div key={tag.name} className="px-2 py-1">
+                    <div key={item.name} className="px-2 py-1">
                       #{item.name}
                     </div>
                   ))}
