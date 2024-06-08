@@ -26,7 +26,7 @@ export interface PostTypeBody extends PostType {
 
 export interface PostTypeDetail extends PostType {
   tags: TagPostType[];
-  // comments: CommentType[]
+  comments: CommentType[]
   reactions: ReactionType[];
   saves: SaveType[];
 }
@@ -34,8 +34,8 @@ export interface PostTypeDetail extends PostType {
 export interface ReactionType {
   id: number;
   userId: string;
-  postId: string;
-  reactTypeId: string;
+  postId: number;
+  reactTypeId: number;
 }
 
 export interface HeartReactionType {
@@ -74,7 +74,7 @@ export interface CommentType {
   createdAt: Date;
   postId: number;
   userId: string;
-  parentId?: number;
+  parentId: number | null;
 }
 
 export interface SaveType {

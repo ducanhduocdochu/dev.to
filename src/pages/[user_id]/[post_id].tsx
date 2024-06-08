@@ -77,7 +77,7 @@ export default function PostPage() {
             detailPost={data_post.detailPost}
             post={data_post.post}
             data_user={data_user}
-            session={session ?? null} // Sử dụng toán tử ?? thay vì ||
+            session={session ?? null}
           />
         ) : (
           <div>Loading ...</div>
