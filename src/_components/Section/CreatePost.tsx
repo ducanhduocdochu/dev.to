@@ -356,13 +356,16 @@ const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
         title,
         content,
         tags,
-        picturePost: selectedImage || null,
+        picturePost: selectedImage,
       });
       if (!response) {
         setIsError("post: can't be create");
       }
       setIsError("");
-      router.push(`${response?.createdById}/${response?.id}`);
+      router.push(`${response?.createdById}/${response?.id}`).then(() => {
+      }).catch((error) => {
+        console.error("Error while navigating:", error);
+      });
     }
   };
 
@@ -436,7 +439,7 @@ const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
                   <div className="mb-3 flex">
                     <div className="mr-4 flex w-[250px] justify-center">
                       <img
-                        src={selectedImage as string}
+                        src={selectedImage}
                         alt="Selected"
                         className="h-[105px]"
                       />
@@ -578,7 +581,7 @@ const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
               {selectedImage && (
                 <div className="mb-8">
                   <img
-                    src={selectedImage as string}
+                    src={selectedImage}
                     alt="Selected"
                     className="w-[876.391px]"
                   />
@@ -700,8 +703,7 @@ const EditorBasics: React.FC = () => {
           .
         </li>
         <li>
-          In addition to images for the post's content, you can also drag and
-          drop a cover image.
+          {"In addition to images for the post's content, you can also drag and drop a cover image."}
         </li>
       </ul>
     </div>
