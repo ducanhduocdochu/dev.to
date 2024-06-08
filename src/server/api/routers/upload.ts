@@ -59,7 +59,6 @@ export const uploadRouter = createTRPCRouter({
           public_id: result.public_id
         };
       } catch (err) {
-        // Attempt to delete the temporary file if an error occurs
         await fs.promises.unlink(tempFilePath).catch((err) => {console.log(err)});
         throw err;
       }

@@ -366,8 +366,7 @@ const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
         setIsError("post: can't be create");
       }
       setIsError("");
-      router.push(`${response?.createdById}/${response?.id}`).then(() => {
-      }).catch((error) => {
+      router.push(`${response?.createdById}/${response?.id}`).catch((error) => {
         console.error("Error while navigating:", error);
       });
     }
