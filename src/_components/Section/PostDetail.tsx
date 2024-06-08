@@ -48,6 +48,12 @@ const PostDetail: FC<PostDetailProps> = ({
     return data_tag?.find((item) => item.id === tagId);
   };
 
+  const handleRouteTag = () => {
+    router.push("/tags").catch((error) => {
+      console.error("Failed to redirect:", error);
+    });
+  }
+
   return (
     <div className="w-[876.391px]">
       <Box classNameProp="w-[876.391px] !p-0 overflow-hidden mb-4">
@@ -120,9 +126,7 @@ const PostDetail: FC<PostDetailProps> = ({
                   type="secondary"
                   className="tag"
                   classNameProp={`h-max !text-[16px] !p-0 hover:no-underline`}
-                  onClick={() => {
-                    router.push('/tags');
-                  }}
+                  onClick={handleRouteTag}
                 >
                   <Tag tag={chooseTag} />
                 </Button>
