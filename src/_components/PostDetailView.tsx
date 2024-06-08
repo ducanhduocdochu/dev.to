@@ -5,17 +5,15 @@ interface PostDetailViewProps {
 }
 
 const PostDetailView: FC<PostDetailViewProps> = ({ content }) => {
-  const replaceText = (input: string) => {
+  const replaceText = (input: string): string => {
     const links: string[] = [];
-    const placeholders: string[] = [];
 
-    const contentWithPlaceholders = input.replace(/!\[(.*?)\]\((https:\/\/res\.cloudinary\.com\/.*)\)/g, (match, alt, url, offset) => {
+    const contentWithPlaceholders = input.replace(/!\[(.*?)\]\((https:\/\/res\.cloudinary\.com\/.*)\)/g, (match, alt, url) => {
       links.push(`<div class="flex justify-center"><img class="my-4" alt="${alt}" src="${url}" /></div>`);
-      placeholders.push(`LINKPLACEHOLDER${links.length - 1}`);
       return `LINKPLACEHOLDER${links.length - 1}`;
     });
 
-    console.log(contentWithPlaceholders)
+    console.log(contentWithPlaceholders);
 
     const replacedText = contentWithPlaceholders
       .replace(/^#### (.*)$/gm, '<h4 class="text-[20px] my-[10px] font-bold">$1</h4>')
@@ -27,13 +25,16 @@ const PostDetailView: FC<PostDetailViewProps> = ({ content }) => {
       .replace(/_(.```?)_/g, "<div class='bg-black text-white'>$1<div>")
       .replace(/\n/g, "<br />");
 
-    const finalText = replacedText.replace(/LINKPLACEHOLDER(\d+)/g, (match, index) => links[Number(index)]);
+    const finalText = replacedText.replace(/LINKPLACEHOLDER(\d+)/g, (match, index) => {
+      const linkIndex = Number(index);
+      return links[linkIndex] || match;
+    });
 
     return finalText;
   };
 
-  const replacedContent = replaceText(content);
-  console.log(replacedContent)
+  const replacedContent: string = replaceText(content);
+
   return <div dangerouslySetInnerHTML={{ __html: replacedContent }} />;
 };
 
