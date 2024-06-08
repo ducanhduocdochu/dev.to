@@ -9,8 +9,7 @@ export default function NotificationsPage() {
 
   useEffect(() => {
     if (!session && status !== "loading") {
-      router.push("/").then(() => {
-      }).catch((error) => {
+      router.push("/").catch((error) => {
         console.error("Error while navigating:", error);
       });
     }
