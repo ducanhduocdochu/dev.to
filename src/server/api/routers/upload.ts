@@ -6,6 +6,12 @@ import cloudinary from "@/server/cloudinary";
 import fs from 'fs';
 import path from 'path';
 
+// Định nghĩa một kiểu cho kết quả trả về từ Cloudinary
+interface CloudinaryUploadResponse {
+  secure_url: string;
+  public_id: string;
+}
+
 const base64Regex = /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/;
 
 export const uploadRouter = createTRPCRouter({
@@ -28,7 +34,8 @@ export const uploadRouter = createTRPCRouter({
       try {
         await fs.promises.writeFile(tempFilePath, buffer);
 
-        const result = await cloudinary.uploader.upload(tempFilePath, {
+        // Tạo một biến kiểu CloudinaryUploadResponse để đảm bảo TypeScript hiểu kết quả trả về
+        const result: CloudinaryUploadResponse = await cloudinary.uploader.upload(tempFilePath, {
           public_id: 'avatar',
           folder: folderName
         });
@@ -50,6 +57,7 @@ export const uploadRouter = createTRPCRouter({
         };
       } catch (err) {
         console.error("Upload failed:", err);
+        throw new Error("Failed to upload image");
       }
     }),
 
@@ -61,8 +69,8 @@ export const uploadRouter = createTRPCRouter({
       const { public_id } = input;
 
       try {
-        // Delete the image from Cloudinary
-        const result = await cloudinary.uploader.destroy(public_id);
+        // Gọi cloudinary.uploader.destroy và gán kết quả cho biến result với kiểu phù hợp
+        const result: { result: string } = await cloudinary.uploader.destroy(public_id);
 
         if (result.result !== 'ok') {
           throw new Error(`Error: Deletion failed for public_id ${public_id}`);

@@ -1,5 +1,3 @@
-// pages/about.tsx
-
 import { FC } from "react";
 import Box from "@/_components/Box";
 import TabBox from "@/_components/TabBox";
@@ -36,6 +34,7 @@ const SideBarRight: FC = () => {
     isLoading: isLoading_recently,
     error: error_recently,
   } = api.post.getPostsPaginatedForTab.useQuery({ page: 1, pageSize: 20 });
+
   const tabBoxs: Tab[] = [
     {
       id: 1,
@@ -69,20 +68,34 @@ const SideBarRight: FC = () => {
       posts: data_recently ? data_recently.posts : [],
     },
   ];
+
   return (
     <div className="w-[358.667px]">
       {tabBoxs.map((tabBox) => (
-        !tabBox.isLoading ?
-        <TabBox
-          key={tabBox.id}
-          title={tabBox.title}
-          sub={tabBox.sub}
-          posts={tabBox.posts}
-        /> : <div>Loading...</div>
+        <div key={tabBox.id}>
+          {!tabBox.isLoading ? (
+            <TabBox
+              title={tabBox.title}
+              sub={tabBox.sub}
+              posts={tabBox.posts}
+            />
+          ) : (
+            <div>Loading...</div>
+          )}
+        </div>
       ))}
       {tabs.map((tab) => (
-        !tab.isLoading ?
-        <Tab key={tab.id} title={tab.title} sub={tab.sub} posts={tab.posts} /> : <div>Loading...</div>
+        <div key={tab.id}>
+          {!tab.isLoading ? (
+            <Tab
+              title={tab.title}
+              sub={tab.sub}
+              posts={tab.posts}
+            />
+          ) : (
+            <div>Loading...</div>
+          )}
+        </div>
       ))}
     </div>
   );

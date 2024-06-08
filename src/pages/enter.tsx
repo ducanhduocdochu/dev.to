@@ -28,7 +28,7 @@ export default function EnterPage() {
   const { data: session, status } = useSession();
 
   if (session) {
-    router.push("/?signin=true").then(() => {}).catch(err => console.error(err));
+    void router.push("/?signin=true").then(() => {}).catch(err => console.error(err));
     return null; 
   }
 
