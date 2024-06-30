@@ -2,6 +2,7 @@ import { FC } from "react";
 import Post from "@/_components/Post";
 import { api } from "@/utils/api";
 import { PostTypeBody } from "@/typeProp";
+import SkeletonList from "./SkeletonList";
 
 const PostWidgets: FC = () => {
   const {
@@ -23,7 +24,7 @@ const PostWidgets: FC = () => {
       {posts.length > 0 && !isLoading_posts ? 
       posts.map((item: PostTypeBody) => {
         return <Post key={item.id} postDetail={item} data_tag={data_tag ?? []} isComment={true} />;
-      }) : <div>Loading...</div>}
+      }) : <SkeletonList x={1} width="w-[685.328px]" height="h-3" />}
     </div>
   );
 };

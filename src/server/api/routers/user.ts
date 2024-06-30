@@ -32,7 +32,6 @@ export const userRouter = createTRPCRouter({
       if (keyword) {
         whereCondition.OR = [
           { name: { contains: keyword, lte: 'insensitive' } },
-          { email: { contains: keyword, lte: 'insensitive' } },
         ];
       }
   

@@ -58,11 +58,11 @@ const PostDetail: FC<PostDetailProps> = ({
   return (
     <div className="w-[876.391px]">
       <Box classNameProp="w-[876.391px] !p-0 overflow-hidden mb-4">
-        <img
+        {post.picturePost && <img
           src={post.picturePost ?? ""}
           alt={post.title}
           className="h-[368.078px] w-[876.391px]"
-        />
+        />}
         <div className="px-16 py-8">
           <div className="mb-[10px] flex h-[32px] justify-between">
             <div className="flex items-center">

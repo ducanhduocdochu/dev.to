@@ -4,6 +4,7 @@ import TabBox from "@/_components/TabBox";
 import Tab from "@/_components/Tab";
 import { api } from "@/utils/api";
 import { PostType } from "@/typeProp";
+import SkeletonList from "../SkeletonList";
 
 export type Tab = {
   id: number;
@@ -80,7 +81,7 @@ const SideBarRight: FC = () => {
               posts={tabBox.posts}
             />
           ) : (
-            <div>Loading...</div>
+            <SkeletonList x={1} width="w-[300px]" height="h-3" />
           )}
         </div>
       ))}
@@ -93,7 +94,7 @@ const SideBarRight: FC = () => {
               posts={tab.posts}
             />
           ) : (
-            <div>Loading...</div>
+            <SkeletonList x={1} width="w-[300px]" height="h-3" />
           )}
         </div>
       ))}

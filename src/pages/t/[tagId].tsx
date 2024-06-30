@@ -6,6 +6,7 @@ import { api } from "@/utils/api";
 import React from "react";
 import TagPost from "@/_components/Section/TagPost";
 import Bar from "@/_components/Bar";
+import SkeletonList from "@/_components/SkeletonList";
 
 const TagPage: React.FC = () => {
   const router = useRouter();
@@ -21,7 +22,7 @@ const TagPage: React.FC = () => {
   const color = data_tag?.color;
 
   return (
-    <div className="h-[10000px] bg-[#f5f5f5] flex flex-col items-center w-screen">
+    <div className="bg-[#f5f5f5] flex flex-col items-center w-screen">
       <Header />
       <Head>
         <title>{!isLoading_tag && data_tag ? data_tag.name : "... Loading"} - DEV Community</title>
@@ -39,10 +40,12 @@ const TagPage: React.FC = () => {
         </Box>
         </>
       ) : (
-        <div>Loading ...</div>
+        <div
+        >
+        Loading...</div>
       )}
 
-      <div className="px-2 mt-4 flex flex-col item-center">
+      <div className="px-2 mt-4 flex flex-col items-center">
         <div className="my-4 font-bold text-[24px]">List post for tag: </div>
         <TagPost />
       </div>

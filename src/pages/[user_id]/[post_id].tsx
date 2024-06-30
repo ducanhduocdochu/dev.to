@@ -7,6 +7,7 @@ import { api } from "@/utils/api";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import SkeletonList from "@/_components/SkeletonList";
 
 export default function PostPage() {
   const router = useRouter();
@@ -55,7 +56,7 @@ export default function PostPage() {
         {!isLoading_post && data_post ? (
           <Reaction detailPost={data_post.detailPost} session = {session ?? null} />
         ) : (
-          <div>Loading ...</div>
+          <SkeletonList x={1} width="w-[64px]" height="h-3" />
         )}
 
         {!isLoading_post && data_post && data_user ? (
@@ -66,7 +67,7 @@ export default function PostPage() {
             session={session ?? null}
           />
         ) : (
-          <div>Loading ...</div>
+          <SkeletonList x={1} width="w-[876.391px]" height="h-3" />
         )}
 
         {!isLoading_user && data_user && data_post ? (
@@ -76,7 +77,7 @@ export default function PostPage() {
             session={session ?? null}
           />
         ) : (
-          <div>Loading...</div>
+          <SkeletonList x={1} width="w-[375.594px]" height="h-3" />
         )}
       </div>
     </MainLayout>

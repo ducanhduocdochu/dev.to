@@ -2,6 +2,7 @@ import { FC } from "react";
 import PostSearch from "@/_components/PostSearch";
 import { api } from "@/utils/api";
 import { PostTypeBody } from "@/typeProp";
+import SkeletonList from "./SkeletonList";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -38,7 +39,7 @@ const PostWidgetsSearch: FC<{
           );
         })
       ) : (
-        <div>Loading...</div>
+        <SkeletonList x={1} width="w-[736px]" height="h-3" />
       )}
     </div>
   );

@@ -337,7 +337,6 @@ export const postRouter = createTRPCRouter({
       const { page, pageSize, tagId } = input;
       const skip = (page - 1) * pageSize;
   
-      // Count total posts with the specified tagId
       const totalPosts = await ctx.db.post.count({
         where: {
           tags: {
@@ -360,7 +359,7 @@ export const postRouter = createTRPCRouter({
           }
         },
         include: {
-          tags: true, // Include tags if necessary
+          tags: true, 
           comments: {
             orderBy: { createdAt: "desc" },
             include: { reactions: true },

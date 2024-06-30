@@ -33,7 +33,7 @@ const Post: FC<{ postDetail: PostTypeBody; data_tag: TagType[], isComment: boole
   };
 
   return (
-    <Box classNameProp="!p-0 mb-2 overflow-hidden">
+    <Box classNameProp="!p-0 mb-2 overflow-hidden w-[717.328px]">
       {postDetail.picturePost ? (
         <img
           src={postDetail.picturePost}

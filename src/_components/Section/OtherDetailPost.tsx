@@ -7,6 +7,7 @@ import { api } from '@/utils/api';
 import { Tab } from '@/_components/Section/SideBarRight';
 import TabBox from '@/_components/TabBox';
 import Advertise from '../Advertise';
+import SkeletonList from '../SkeletonList';
 
 type OtherDetailPostProps = {
   data_user: UserType;
@@ -92,7 +93,9 @@ const OtherDetailPost: FC<OtherDetailPostProps> = ({ data_user, id, session }) =
               posts={tabBox.posts}
             />
           ) : (
-            <div key={tabBox.id}>Loading...</div>
+            <div key={tabBox.id}>
+              <SkeletonList x={1} width="w-[200px]" height="h-3" />
+            </div>
           )
         )}
       </div>

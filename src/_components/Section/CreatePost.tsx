@@ -26,6 +26,7 @@ import CloseIcon from "../Icon/CloseIcon";
 import { TagType } from "@/typeProp";
 import { api } from "@/utils/api";
 import { useRouter } from "next/router";
+import FullScreenLoader from "../Loading";
 
 export type ButtonPostType = {
   id: number;
@@ -39,6 +40,7 @@ const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
 }) => {
   const router = useRouter();
   const [title, setTitle] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [idPicture, setIdPicture] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [tags, setTags] = useState<TagType[]>([]);
@@ -356,12 +358,14 @@ const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
     } else if (content == "") {
       setIsError("content: can't be blank");
     } else {
+      setIsLoading(true)
       const response = await mutationp.mutateAsync({
         title,
         content,
         tags,
         picturePost: selectedImage,
       });
+      setIsLoading(false)
       if (!response) {
         setIsError("post: can't be create");
       }
@@ -374,6 +378,7 @@ const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
 
   return (
     <div className="flex">
+      <FullScreenLoader loading={isLoading} />
       <div>
         <div className="flex h-header-h w-[956.391px] justify-center">
           {/* Header */}

@@ -3,6 +3,7 @@ import PostSearch from "@/_components/PostSearch";
 import { api } from "@/utils/api";
 import { PostTypeBody, UserType } from "@/typeProp";
 import UserSearch from "@/_components/UserSearch";
+import SkeletonList from "./SkeletonList";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -33,7 +34,7 @@ const UserWidgetsSearch: FC<{
           );
         })
       ) : (
-        <div>Loading...</div>
+        <SkeletonList x={1} width="w-[736px]" height="h-3" />
       )}
     </div>
   );

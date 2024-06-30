@@ -29,6 +29,7 @@ import { useRouter } from "next/router";
 import { Session } from "next-auth";
 import { extractPublicId } from "@/utils";
 import OptionIcon from "../Icon/PostIcon/OptionIcon";
+import FullScreenLoader from "../Loading";
 
 export type ButtonPostType = {
   id: number;
@@ -45,6 +46,7 @@ const EditPost: FC<{
 }> = ({ data_tags, user_id, post_id, session }) => {
   const router = useRouter();
   const [title, setTitle] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [idPicture, setIdPicture] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [tags, setTags] = useState<TagType[]>([]);
@@ -93,7 +95,6 @@ const EditPost: FC<{
 
       if (data_post.post.picturePost) {
         setSelectedImage(data_post.post.picturePost);
-        // setIdPicture(extractPublicId(data_post.post.picturePost));
       }
     }
   }, [data_post]);
@@ -181,9 +182,6 @@ const EditPost: FC<{
 
   const handleRemoveImage = () => {
     try {
-      // const response = await mutationd.mutateAsync({ public_id: idPicture });
-
-      // if (response.message === "Image deleted successfully") {
         setSelectedImage(null);
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
@@ -384,6 +382,7 @@ const EditPost: FC<{
     } else if (content == "") {
       setIsError("content: can't be blank");
     } else {
+      setIsLoading(true)
       const response = await mutationp.mutateAsync({
         postId: post_id,
         title,
@@ -391,6 +390,7 @@ const EditPost: FC<{
         tags,
         picturePost: selectedImage,
       });
+      setIsLoading(false)
       if (!response) {
         setIsError("post: can't be update");
       }
@@ -402,9 +402,11 @@ const EditPost: FC<{
   };
 
   const handleDelete = async () => {
+    setIsLoading(true)
     const response = await mutationD.mutateAsync({
       postId: post_id,
     });
+    setIsLoading(false)
     if (!response) {
       setIsError("post: can't be delete");
     }
@@ -420,6 +422,7 @@ const EditPost: FC<{
 
   return (
     <div className="flex">
+      <FullScreenLoader loading={isLoading} />
       <div>
         <div className="flex h-header-h w-[956.391px] justify-center">
           {/* Header */}
@@ -621,7 +624,7 @@ const EditPost: FC<{
                   <Button
                     type="secondary"
                     className=""
-                    classNameProp="w-[100px] bg-button p-2 text-white w-[84px] hover:no-underline hover:bg-[#2f3ab2]"
+                    classNameProp="w-[110px] bg-button p-2 text-white w-[84px] hover:no-underline hover:bg-[#2f3ab2]"
                     onClick={handleDelete}
                   >
                     Delete
@@ -629,7 +632,7 @@ const EditPost: FC<{
                   <Button
                     type="secondary"
                     className=""
-                    classNameProp="w-[100px] bg-button p-2 text-white w-[84px] hover:no- mt-[12px] hover:bg-[#2f3ab2]"
+                    classNameProp="w-[110px] bg-button p-2 text-white w-[84px] hover:no- mt-[12px] hover:bg-[#2f3ab2]"
                     onClick={handleUnPublish}
                   >
                     Unpublish
@@ -692,7 +695,7 @@ const EditPost: FC<{
                   <Button
                     type="secondary"
                     className=""
-                    classNameProp="w-[100px] bg-button p-2 text-white w-[84px] hover:no-underline hover:bg-[#2f3ab2]"
+                    classNameProp="w-[110px] bg-button p-2 text-white w-[84px] hover:no-underline hover:bg-[#2f3ab2]"
                     onClick={handleDelete}
                   >
                     Delete
@@ -700,7 +703,7 @@ const EditPost: FC<{
                   <Button
                     type="secondary"
                     className=""
-                    classNameProp="w-[100px] bg-button p-2 text-white w-[84px] hover:no-underline mt-[12px] hover:bg-[#2f3ab2]"
+                    classNameProp="w-[110px] bg-button p-2 text-white w-[84px] hover:no-underline mt-[12px] hover:bg-[#2f3ab2]"
                     onClick={handleUnPublish}
                   >
                     Unpublish

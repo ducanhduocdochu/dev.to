@@ -3,6 +3,7 @@ import Button from "@/_components/Button";
 import { api } from "@/utils/api";
 import { TagType } from "@/typeProp";
 import { useRouter } from "next/router";
+import SkeletonList from "./SkeletonList";
 
 const MenuTag: FC = () => {
   const { data: tags, isLoading, error } = api.tag.getAll.useQuery();
@@ -13,7 +14,7 @@ const MenuTag: FC = () => {
       <p className="py-2 pl-[16px] font-bold">Popular Tags</p>
       <div className="h-[346.444px] overflow-y-scroll">
         {isLoading ? (
-          <div>Loading....</div>
+          <SkeletonList x={1} width="w-[200px]" height="h-3" />
         ) : (
           <>
             {tags?.map((tag: TagType) => (
