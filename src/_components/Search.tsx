@@ -10,7 +10,7 @@ const Search: FC = () => {
 
   const handleSearch = async () => {
     if (searchTerm.trim() !== "") {
-      await router.push(`/search?utf8=✓&q=${searchTerm}`);
+      await router.push(`search?q=${searchTerm}&filters=class_name:Article`);
     }
   };
 

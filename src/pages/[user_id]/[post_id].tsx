@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import OtherDetailPost from "@/_components/Section/OtherDetailPost";
 import PostDetail from "@/_components/Section/PostDetail";
 import Reaction from "@/_components/Section/Reaction";
@@ -42,37 +42,23 @@ export default function PostPage() {
     return null;
   }
 
-  // if (error_post || error_user) {
-  //   return (
-  //     <div className="m-4 mt-0 flex w-header-w justify-between">
-  //       Error loading post | user
-  //     </div>
-  //   );
-  // }
-
-  if (!data_post || !data_user) {
-    return (
-      <div className="m-4 mt-0 flex w-header-w justify-between">Not Found</div>
-    );
-  }
-
   return (
     <MainLayout>
       <Head>
-        {!isLoading_post ? (
+        {!isLoading_post && data_post ? (
           <title>{data_post.post.title} - DEV Community</title>
         ) : (
           <title>... Loading</title>
         )}
       </Head>
       <div className="m-4 mt-0 flex w-header-w justify-between">
-        {!isLoading_post ? (
-          <Reaction detailPost={data_post.detailPost} />
+        {!isLoading_post && data_post ? (
+          <Reaction detailPost={data_post.detailPost} session = {session ?? null} />
         ) : (
           <div>Loading ...</div>
         )}
 
-        {!isLoading_post ? (
+        {!isLoading_post && data_post && data_user ? (
           <PostDetail
             detailPost={data_post.detailPost}
             post={data_post.post}
@@ -83,11 +69,11 @@ export default function PostPage() {
           <div>Loading ...</div>
         )}
 
-        {!isLoading_user && data_user ? (
+        {!isLoading_user && data_user && data_post ? (
           <OtherDetailPost
             data_user={data_user}
             id={data_post.post.createdById}
-            session={session ?? null} // Sử dụng toán tử ?? thay vì ||
+            session={session ?? null}
           />
         ) : (
           <div>Loading...</div>

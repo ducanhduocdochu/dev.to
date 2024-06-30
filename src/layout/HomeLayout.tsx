@@ -15,13 +15,13 @@ export default function HomeLayout({
     <div className="flex justify-center bg-bg2 pt-header-h">
       <Header />
       <div className="flex justify-center p-4">
-      <Head>
-        <title>DEV Community</title>
-      </Head>
-      <div className="m-4 mt-0 flex w-header-w justify-between">
-        <SideBarLeft />{children}<SideBarRight />
-      </div>
+        <Head>
+          <title>DEV Community</title>
+        </Head>
+        <div className="m-4 mt-0 flex w-header-w justify-between">
+          <SideBarLeft />{children}<SideBarRight />
         </div>
+      </div>
     </div>
   );
 }

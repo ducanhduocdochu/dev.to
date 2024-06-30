@@ -1,12 +1,7 @@
-import { useSession } from "next-auth/react";
-import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { FC } from "react";
 import Box from "@/_components/Box";
-import SaveIcon from "../Icon/SaveIcon";
 import Button from "../Button";
-import CommentIcon from "../Icon/CommentIcon";
 import Tag from "../Tag";
 import HeartIcon from "../Icon/PostDetailIcon/HeartIcon";
 import UnicornIcon from "../Icon/PostDetailIcon/UnicornIcon";
@@ -20,9 +15,9 @@ import { detailPostType } from "@/_components/Section/Reaction";
 import PostDetailView from "../PostDetailView";
 import CommentInput from "../CommentInput";
 import CommentDetailWidget from "../CommentDetailWidget";
-import ImpressionWidget from "../ImpressionWidget";
 import { api } from "@/utils/api";
 import { PostTypeDetail, TagPostType, TagType } from "@/typeProp";
+import { timeDifference } from "@/utils";
 
 type PostDetailProps = {
   detailPost: detailPostType;
@@ -48,11 +43,17 @@ const PostDetail: FC<PostDetailProps> = ({
     return data_tag?.find((item) => item.id === tagId);
   };
 
-  const handleRouteTag = () => {
-    router.push("/tags").catch((error) => {
+  const handleRouteTag = (tagId: number) => {
+    router.push(`/t/${tagId}`).catch((error) => {
       console.error("Failed to redirect:", error);
     });
-  }
+  };
+
+  const handleRouteEdit = () => {
+    router.push(`/${session?.user.id}/${post.id}/edit`).catch((error) => {
+      console.error("Failed to redirect:", error);
+    });
+  };
 
   return (
     <div className="w-[876.391px]">
@@ -63,22 +64,64 @@ const PostDetail: FC<PostDetailProps> = ({
           className="h-[368.078px] w-[876.391px]"
         />
         <div className="px-16 py-8">
-          <div className="mb-[10px] flex h-[32px] items-center">
-            <Button type="secondary" className="" classNameProp="!p-0 h-max">
-              <img
-                src={data_user.image ?? ""}
-                style={{ backgroundColor: "#dddddd;" }}
-                className="mr-2 h-[32px] w-[32px] rounded-full"
-                alt={data_user.name ?? ""}
-              />
-            </Button>
-            <div className="pl-[12px]">
-              <h2 className="text-[16px] font-medium text-text3">
-                {data_user.name}
-              </h2>
-              <p className="text-[12px] text-text4">{String(post.createdAt)}</p>
+          <div className="mb-[10px] flex h-[32px] justify-between">
+            <div className="flex items-center">
+              <Button
+                type="secondary"
+                className=""
+                classNameProp="!p-0 h-max"
+                onClick={async () => {
+                  try {
+                    await router.push(`/${post.createdById}`);
+                  } catch (error) {
+                    console.error("Failed to navigate:", error);
+                  }
+                  return null;
+                }}
+              >
+                <img
+                  src={data_user.image ?? ""}
+                  style={{ backgroundColor: "#dddddd;" }}
+                  className="mr-2 h-[32px] w-[32px] rounded-full"
+                  alt={data_user.name ?? ""}
+                />
+              </Button>
+              <div className="pl-[12px]">
+                <h2 className="text-[16px] font-medium text-text3">
+                  {data_user.name}
+                </h2>
+                <p className="text-[12px] text-text4">
+                  {timeDifference(String(post.createdAt))}
+                </p>
+              </div>
             </div>
-          </div>
+            {session?.user.id == post.createdById &&
+            <div className="flex p-1 bg-[#fef5e6] h-max rounded-md">
+              <Button
+                type="secondary"
+                className=""
+                classNameProp={`!py-1 !px-2 !text-[16px] flex items-center bg-[#fef5e6] hover:no-underline`}
+                onClick={handleRouteEdit}
+              >
+                Edit
+              </Button>
+
+              <Button
+                type="secondary"
+                className=""
+                classNameProp={`!py-1 !px-2 !text-[16px] flex items-center bg-[#fef5e6] hover:no-underline`}
+              >
+                Manage
+              </Button>
+              <Button
+                type="secondary"
+                className=""
+                classNameProp={`!py-1 !px-2 !text-[16px] flex items-center bg-[#fef5e6] hover:no-underline`}
+              >
+                Stats
+              </Button>
+            </div>}
+          </div> 
 
           <div className="mb-[20px] mt-[33px] flex">
             {1 > 0 && (
@@ -126,7 +169,7 @@ const PostDetail: FC<PostDetailProps> = ({
                   type="secondary"
                   className="tag"
                   classNameProp={`h-max !text-[16px] !p-0 hover:no-underline`}
-                  onClick={handleRouteTag}
+                  onClick={() => handleRouteTag(tag.tagId)}
                 >
                   <Tag tag={chooseTag} />
                 </Button>
@@ -164,11 +207,10 @@ const PostDetail: FC<PostDetailProps> = ({
             </Button>
           </div>
           {/* Input */}
-          <CommentInput session={session} />
-          <CommentDetailWidget session={session} />
+          <CommentInput session={session} parentId={null} postId={post.id} />
+          <CommentDetailWidget session={session} list_comment={post.comments} />
         </div>
       </Box>
-      <ImpressionWidget />
     </div>
   );
 };

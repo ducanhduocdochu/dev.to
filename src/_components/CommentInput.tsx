@@ -15,19 +15,29 @@ import PictureIcon from "./Icon/PostIcon/PictureIcon";
 import { api } from "@/utils/api";
 import Button from "./Button";
 import ThreeDotIcon from "./Icon/PostDetailIcon/ThreeDotIcon";
+import { useRouter } from "next/router";
+import PostDetailView from "./PostDetailView";
 
 interface UploadResponse {
   image_url: string;
 }
 
-const CommentInput: FC<{ session: Session | null | undefined }> = ({ session }) => {
+const CommentInput: FC<{ session: Session | null | undefined, parentId: number | null, postId: number }> = ({ session, parentId, postId }) => {
+  const router = useRouter()
   const [isFocused, setIsFocused] = useState(false);
   const contentRef = useRef<HTMLTextAreaElement>(null);
   const [content, setContent] = useState<string>("");
   const [heading, setHeading] = useState<number>(0);
+  const [isEdit, setIsEdit] = useState<boolean>(true);
   const mutation = api.upload.uploadImage.useMutation();
+  const mutationM = api.comment.createComment.useMutation();
 
   const handleFocus = () => {
+    if (!session){
+      router.push("/enter").catch((error) => {
+        console.error("Error while navigating:", error);
+      });
+    }
     setIsFocused(true);
   };
 
@@ -180,7 +190,7 @@ const CommentInput: FC<{ session: Session | null | undefined }> = ({ session }) 
             const response = await mutation.mutateAsync({
               file: base64String,
               fileName,
-              contentType,
+              type: "comment",
             }) as UploadResponse;
             if (response) {
               const url = response.image_url;
@@ -200,14 +210,34 @@ const CommentInput: FC<{ session: Session | null | undefined }> = ({ session }) 
     handleRemoveImageContent();
   };
 
+  const handleSubmit = async () => {
+    if (content.length > 0) {
+      const response = await mutationM.mutateAsync({
+          content,
+          parentId,
+          postId
+        });
+        if (!response) {
+          return
+        }
+        setIsFocused(false)
+        setContent("")
+        // router.push(`${response?.userId}/${response?.postId}`).catch((error) => {
+        //   console.error("Error while navigating:", error);
+        // });
+      }
+    } 
+  
+
   return (
     <div className="mt-[24px] flex">
+      {session &&
       <img
         src={session?.user?.image ?? undefined}
         style={{ backgroundColor: "#dddddd" }}
         className="mr-2 h-[32px] w-[32px] rounded-full focus:border-transparent focus:outline-none"
         alt="User profile"
-      />
+      />}
       <input
         type="file"
         accept="image/*"
@@ -217,15 +247,17 @@ const CommentInput: FC<{ session: Session | null | undefined }> = ({ session }) 
       />
       <div className="flex w-full flex-col">
         <div className="w-full overflow-hidden overflow-hidden rounded-md border border-transparent focus-within:border focus-within:border-button focus-within:shadow-search">
-          <textarea
+          {isEdit ? <textarea
             className={`border-t-[rgb(23, 23, 23)] border-l-[rgb(23, 23, 23)] border-r-[rgb(23, 23, 23)] w-full border-l border-r border-t p-2 focus:border-transparent focus:outline-none ${isFocused ? "h-[128px]" : ""} mb-0`}
             placeholder="Add to the discussion"
             onFocus={handleFocus}
             onChange={handleContentChange}
             ref={contentRef}
             value={content}
-          />
-          {isFocused && (
+          /> : <div className={`h-max border-[rgb(23, 23, 23)] w-full border-l border-b border-r border-t p-2 focus:border-transparent focus:outline-none ${isFocused ? "h-[128px]" : ""} mb-0`}>
+            <PostDetailView content = {content} />
+            </div>}
+          {isFocused && isEdit && (
             <div className="border-[rgb(23, 23, 23)] flex justify-between border border bg-[#f9f9f9]">
               <div className="flex">
                 {buttons.map((item) => (
@@ -254,6 +286,7 @@ const CommentInput: FC<{ session: Session | null | undefined }> = ({ session }) 
               type="primary"
               classNameProp="justify-center bg-[#3b49df] hover:no-underline hover:!bg-button4 text-white"
               className="mr-2"
+              onClick={() => handleSubmit()}
             >
               Submit
             </Button>
@@ -261,8 +294,9 @@ const CommentInput: FC<{ session: Session | null | undefined }> = ({ session }) 
               type="primary"
               classNameProp="justify-center !bg-[#d6d6d7] border-none hover:no-underline hover:!bg-[#bdbdbd] text-black hover:!text-black"
               className="mr-2"
+              onClick={() => setIsEdit(!isEdit)}
             >
-              Preview
+              {isEdit ? "Preview" : "Continue Edit"}
             </Button>
           </div>
         )}

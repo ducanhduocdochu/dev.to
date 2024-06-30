@@ -4,7 +4,6 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
-import { TagType } from "@/typeProp";
 
 export const postRouter = createTRPCRouter({
   getPostById: publicProcedure
@@ -13,11 +12,21 @@ export const postRouter = createTRPCRouter({
       const post = await ctx.db.post.findUnique({
         where: { id: input.postId },
         include: {
-          comments: true,
+          comments: {
+            where: {parentId: null},
+            include: {
+              reactions: true,
+              children: true
+            }
+          },
           tags: true,
           saves: true,
           reactions: true,
         },
+      });
+
+      const comments = await ctx.db.comment.findMany({
+        where: { postId: input.postId },
       });
 
       if (!post) {
@@ -25,7 +34,7 @@ export const postRouter = createTRPCRouter({
       }
 
       const detailPost = {
-        quantityComment: post.comments.length,
+        quantityComment: comments.length,
         quantitySave: post.saves.length,
         quantityHeart: post.reactions.filter(
           (reaction) => reaction.reactTypeId === 1,
@@ -70,10 +79,6 @@ export const postRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { title, content, tags, picturePost } = input;
       const userId = ctx.session.user.id;
-      console.log("title: ", title);
-      console.log("content: ", content);
-      console.log("tags: ", tags);
-      console.log("picturePost: ", picturePost);
 
       const post = await ctx.db.post.create({
         data: {
@@ -104,29 +109,275 @@ export const postRouter = createTRPCRouter({
       });
     }),
 
+    updatePost: protectedProcedure
+    .input(
+      z.object({
+        postId: z.number(),
+        title: z.string().optional(),
+        content: z.string().optional(),
+        tags: z
+          .array(
+            z.object({
+              id: z.number(),
+              name: z.string(),
+              color: z.string(),
+            }),
+          )
+          .optional(),
+        picturePost: z.string().nullable().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { postId, title, content, tags, picturePost } = input;
+      const userId = ctx.session.user.id;
+  
+      const post = await ctx.db.post.update({
+        where: { id: postId },
+        data: {
+          ...(title && { title }),
+          ...(content && { content }),
+          ...(picturePost !== undefined && { picturePost }),
+        },
+      });
+  
+      if (tags) {
+        await ctx.db.postTags.deleteMany({
+          where: { postId: postId },
+        });
+  
+        await Promise.all(
+          tags.map(async (item) => {
+            await ctx.db.postTags.create({
+              data: {
+                tagId: item.id,
+                postId: post.id,
+              },
+            });
+          }),
+        );
+      }
+  
+      return ctx.db.post.findUnique({
+        where: { id: post.id },
+        include: {
+          tags: true,
+        },
+      });
+    }),
+
+  deletePost: protectedProcedure
+    .input(
+      z.object({
+        postId: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { postId } = input;
+      const userId = ctx.session.user.id;
+  
+      const post = await ctx.db.post.findUnique({
+        where: { id: postId },
+      });
+  
+      if (!post) {
+        throw new Error("Post not found");
+      }
+  
+      if (post.createdById !== userId) {
+        throw new Error("You are not authorized to delete this post");
+      }
+  
+      await ctx.db.postTags.deleteMany({
+        where: { postId: postId },
+      });
+  
+      await ctx.db.post.delete({
+        where: { id: postId },
+      });
+  
+      return { success: true, message: "Post deleted successfully" };
+    }),
+
   getAllPosts: publicProcedure.query(async ({ ctx }) => {
     return ctx.db.post.findMany({
       orderBy: { createdAt: "desc" },
       include: {
         createdBy: true,
-        comments: true,
+        comments: {
+          include: {
+            children: true
+          },
+        },
         tags: true,
       },
     });
   }),
 
-  getPostsByUser: publicProcedure
-    .input(z.object({ userId: z.string() }))
+  searchPosts: publicProcedure
+  .input(
+    z.object({
+      page: z.number().min(1),
+      pageSize: z.number().min(1).max(100),
+      keyword: z.string().optional(),
+      sort_direction: z.enum(['asc', 'desc']).default('asc'),
+    }),
+  )
+  .query(async ({ ctx, input }) => {
+    const { page, pageSize, keyword, sort_direction } = input;
+    const skip = (page - 1) * pageSize;
+
+    const whereCondition: any = {};
+
+    if (keyword) {
+      whereCondition.OR = [
+        { title: { contains: keyword, lte: 'insensitive' } },
+        { content: { contains: keyword, lte: 'insensitive' } },
+      ];
+    }
+
+    const totalPosts = await ctx.db.post.count({ where: whereCondition });
+    const posts = await ctx.db.post.findMany({
+      skip,
+      take: pageSize,
+      orderBy: { createdAt: sort_direction },
+      where: whereCondition,
+      include: {
+        tags: true,
+        comments: {
+          orderBy: { createdAt: 'desc' },
+          include: { reactions: true },
+          where: { parentId: null },
+          take: 2,
+        },
+        _count: {
+          select: { comments: true, reactions: true },
+        },
+      },
+    });
+
+    return {
+      posts,
+      totalPosts,
+      totalPages: Math.ceil(totalPosts / pageSize),
+    };
+  }),
+
+  getPostsByUserForTab: publicProcedure
+  .input(
+    z.object({
+      page: z.number().min(1),
+      pageSize: z.number().min(1).max(100),
+      userId: z.string()
+    }),
+  )
+  .query(async ({ ctx, input }) => {
+    const { page, pageSize, userId } = input;
+    const skip = (page - 1) * pageSize;
+    const totalPosts = await ctx.db.post.count();
+    const posts = await ctx.db.post.findMany({
+      skip,
+      take: pageSize,
+      orderBy: { createdAt: "desc" },
+      where: {createdById: userId}
+    });
+    return {
+      posts,
+      totalPosts,
+      totalPages: Math.ceil(totalPosts / pageSize),
+    };
+  }),
+
+  getPostsByUserForBody: publicProcedure
+    .input(
+      z.object({
+        page: z.number().min(1),
+        pageSize: z.number().min(1).max(100),
+        createById:  z.string()
+      }),
+    )
     .query(async ({ ctx, input }) => {
-      return ctx.db.post.findMany({
-        where: { createdById: input.userId },
+      const { page, pageSize, createById } = input;
+      const skip = (page - 1) * pageSize;
+      const totalPosts = await ctx.db.post.count();
+      const posts = await ctx.db.post.findMany({
+        skip,
+        take: pageSize,
         orderBy: { createdAt: "desc" },
+        where: {createdById: createById},
         include: {
-          createdBy: true,
-          comments: true,
           tags: true,
+          comments: {
+            orderBy: { createdAt: "desc" },
+            include: {reactions: true},
+            where: {parentId: null},
+            take: 2,
+          },
+          _count: {
+            select: { comments: true, reactions: true },
+          },
         },
       });
+
+      return {
+        posts,
+        totalPosts,
+        totalPages: Math.ceil(totalPosts / pageSize),
+      };
+    }),
+
+    getPostsByTagIdForBody: publicProcedure
+    .input(
+      z.object({
+        page: z.number().min(1),
+        pageSize: z.number().min(1).max(100),
+        tagId: z.number()
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { page, pageSize, tagId } = input;
+      const skip = (page - 1) * pageSize;
+  
+      // Count total posts with the specified tagId
+      const totalPosts = await ctx.db.post.count({
+        where: {
+          tags: {
+            some: {
+              tagId: tagId
+            }
+          }
+        }
+      });
+  
+      const posts = await ctx.db.post.findMany({
+        skip,
+        take: pageSize,
+        orderBy: { createdAt: "desc" },
+        where: {
+          tags: {
+            some: {
+              tagId: tagId
+            }
+          }
+        },
+        include: {
+          tags: true, // Include tags if necessary
+          comments: {
+            orderBy: { createdAt: "desc" },
+            include: { reactions: true },
+            where: { parentId: null },
+            take: 2,
+          },
+          _count: {
+            select: { comments: true, reactions: true },
+          },
+        },
+      });
+  
+      return {
+        posts,
+        totalPosts,
+        totalPages: Math.ceil(totalPosts / pageSize),
+      };
     }),
 
   getPostsPaginatedForTab: publicProcedure
@@ -152,7 +403,7 @@ export const postRouter = createTRPCRouter({
       };
     }),
 
-  getPostsPaginatedForBody: publicProcedure
+    getPostsPaginatedForBody: publicProcedure
     .input(
       z.object({
         page: z.number().min(1),
@@ -169,6 +420,15 @@ export const postRouter = createTRPCRouter({
         orderBy: { createdAt: "desc" },
         include: {
           tags: true,
+          comments: {
+            orderBy: { createdAt: "desc" },
+            include: {reactions: true},
+            where: {parentId: null},
+            take: 2,
+          },
+          _count: {
+            select: { comments: true, reactions: true },
+          },
         },
       });
 
@@ -178,6 +438,9 @@ export const postRouter = createTRPCRouter({
         totalPages: Math.ceil(totalPosts / pageSize),
       };
     }),
+
+
+  // getPosts
 
   //   getPostsByTag: publicProcedure
   //     .input(z.object({ tagName: z.string() }))

@@ -36,7 +36,7 @@ model Post {
 model ReactionType {
   id        Int        @id @default(autoincrement())
   name      String     @unique
-  reactions Reaction[] // Add this line
+  reactions Reaction[]
 }
 
 model Reaction {
@@ -50,18 +50,28 @@ model Reaction {
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
-  content   String
-  createdAt DateTime @default(now())
-  postId    Int
-  userId    String
-  parentId  Int?
+  id              Int                @id @default(autoincrement())
+  content         String
+  createdAt       DateTime           @default(now())
+  postId          Int
+  userId          String
+  parentId        Int?
 
-  post      Post      @relation(fields: [postId], references: [id])
-  parent    Comment?  @relation("CommentToComment", fields: [parentId], references: [id])
-  children  Comment[] @relation("CommentToComment")
+  post            Post               @relation(fields: [postId], references: [id])
+  parent          Comment?           @relation("CommentToComment", fields: [parentId], references: [id])
+  children        Comment[]          @relation("CommentToComment")
+  reactions       ReactionComment[]  @relation("CommentReactions")
 
   @@index([postId])
+}
+
+model ReactionComment {
+  id        Int     @id @default(autoincrement())
+  userId    String
+  commentId Int
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade, name: "CommentReactions")
+
+  @@index([commentId])
 }
 
 model Save {

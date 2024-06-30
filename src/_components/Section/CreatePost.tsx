@@ -177,7 +177,7 @@ const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
             const response = await mutation.mutateAsync({
               file: base64String,
               fileName,
-              contentType,
+              type: "post",
             });
             if (response) {
               setIsUpload(false)
@@ -220,7 +220,7 @@ const CreatePost: FC<{ data_tags: TagType[] | undefined }> = ({
             const response = await mutation.mutateAsync({
               file: base64String,
               fileName,
-              contentType,
+              type: "post",
             });
             if (response) {
               const url = response.image_url;

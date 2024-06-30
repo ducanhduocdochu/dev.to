@@ -39,25 +39,25 @@ const initialList: BarProps[] = [
     link: "/top/week",
     elements: [
       {
-        id: 1,
+        id: 5,
         title: "Week",
         link: "/top/week",
         isChoose: true,
       },
       {
-        id: 2,
+        id: 6,
         title: "Month",
         link: "/top/month",
         isChoose: false,
       },
       {
-        id: 3,
+        id: 7,
         title: "Year",
         link: "/top/year",
         isChoose: false,
       },
       {
-        id: 4,
+        id: 8,
         title: "Infinity",
         link: "/top/infinity",
         isChoose: false,

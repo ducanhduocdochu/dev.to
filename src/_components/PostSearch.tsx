@@ -17,7 +17,7 @@ export interface UserType {
   image: string | null;
 }
 
-const Post: FC<{ postDetail: PostTypeBody; data_tag: TagType[], isComment: boolean }> = ({ postDetail, data_tag, isComment }) => {
+const PostSearch: FC<{ postDetail: PostTypeBody; data_tag: TagType[] }> = ({ postDetail, data_tag }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const {
@@ -34,17 +34,6 @@ const Post: FC<{ postDetail: PostTypeBody; data_tag: TagType[], isComment: boole
 
   return (
     <Box classNameProp="!p-0 mb-2 overflow-hidden">
-      {postDetail.picturePost ? (
-        <img
-          src={postDetail.picturePost}
-          style={{ backgroundColor: "#dddddd;" }}
-          className="h-[301.266px] w-[717.328px]"
-          alt={postDetail.title}
-        />
-      ) : (
-        <></>
-      )}
-
       <div className="p-5 pb-3">
         <div className="mb-[10px] flex h-[32px] items-center">
           <Button
@@ -218,9 +207,8 @@ const Post: FC<{ postDetail: PostTypeBody; data_tag: TagType[], isComment: boole
         </div>
       </div>
 
-      {session && isComment && <CommentWidget commentDetail={postDetail.comments} _count = {postDetail._count.comments} user_id = {postDetail.createdById}/>}
     </Box>
   );
 };
 
-export default Post;
+export default PostSearch;

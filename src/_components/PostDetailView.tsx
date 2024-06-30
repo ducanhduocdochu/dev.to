@@ -18,8 +18,6 @@ const PostDetailView: FC<PostDetailViewProps> = ({ content }) => {
       }
     );
 
-    console.log(contentWithPlaceholders);
-
     const replacedText = contentWithPlaceholders
       .replace(/^#### (.*)$/gm, '<h4 class="text-[20px] my-[10px] font-bold">$1</h4>')
       .replace(/^### (.*)$/gm, '<h3 class="text-[25px] my-[10px] font-bold">$1</h3>')

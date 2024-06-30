@@ -24,7 +24,7 @@ const MenuTag: FC = () => {
                 classNameProp="justify-start items-center"
                 onClick={async () => {
                   try {
-                    await router.push("/tags");
+                    await router.push(`/t/${tag.id}`);
                   } catch (error) {
                     console.error('Failed to navigate:', error);
                   }

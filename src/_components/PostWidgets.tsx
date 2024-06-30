@@ -22,7 +22,7 @@ const PostWidgets: FC = () => {
     <div>
       {posts.length > 0 && !isLoading_posts ? 
       posts.map((item: PostTypeBody) => {
-        return <Post key={item.id} postDetail={item} data_tag={data_tag ?? []} />;
+        return <Post key={item.id} postDetail={item} data_tag={data_tag ?? []} isComment={true} />;
       }) : <div>Loading...</div>}
     </div>
   );

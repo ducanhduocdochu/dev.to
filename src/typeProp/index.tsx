@@ -4,6 +4,33 @@ export interface TagType {
   color: string;
 }
 
+export interface CommentType {
+  id: number;
+  content: string;
+  createdAt: Date;
+  postId: number;
+  userId: string;
+  parentId: number | null;
+  reactions: ReactionCommentType[];
+}
+
+export interface CommentType2 {
+  id: number;
+  content: string;
+  createdAt: Date;
+  postId: number;
+  userId: string;
+  parentId: number | null;
+  reactions: ReactionCommentType[];
+  childrens: CommentType[];
+}
+
+export interface ReactionCommentType {
+  id: number;
+  userId: string;
+  commentId: number;
+}
+
 export interface TagPostType {
   postId: number;
   tagId: number;
@@ -20,13 +47,34 @@ export interface PostType {
   createdById: string;
 }
 
+export interface UserType {
+  id: string;
+  name: string | null;
+  email: string | null;
+  emailVerified: Date | null;
+  image: string | null;
+}
+
+
 export interface PostTypeBody extends PostType {
   tags: TagPostType[];
+  comments: CommentType[];
+  _count: {
+    comments: number;
+    reactions: number;
+  };
 }
 
 export interface PostTypeDetail extends PostType {
   tags: TagPostType[];
   comments: CommentType[]
+  reactions: ReactionType[];
+  saves: SaveType[];
+}
+
+export interface PostTypeDetail2 extends PostType {
+  tags: TagPostType[];
+  comments: CommentType2[]
   reactions: ReactionType[];
   saves: SaveType[];
 }
@@ -66,15 +114,6 @@ export interface FireReactionType {
   id: number;
   userId: string;
   postId: number;
-}
-
-export interface CommentType {
-  id: number;
-  content: string;
-  createdAt: Date;
-  postId: number;
-  userId: string;
-  parentId: number | null;
 }
 
 export interface SaveType {

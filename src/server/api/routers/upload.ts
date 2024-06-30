@@ -5,6 +5,7 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import cloudinary from "@/server/cloudinary";
 import fs from 'fs';
 import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 interface CloudinaryDeleteResponse {
   result: string;
@@ -19,26 +20,23 @@ export const uploadRouter = createTRPCRouter({
         message: "Invalid base64 string",
       }),
       fileName: z.string(),
-      contentType: z.string(),
+      type: z.string(),
     }))
     .mutation(async ({ input, ctx }) => {
-      const { file, fileName, contentType } = input;
+      const { file, fileName, type } = input;
       const userId = ctx.session.user.id;
       const userName = ctx.session.user.name;
       const buffer = Buffer.from(file, 'base64');
       const tempFilePath = path.join('/tmp', `temp_${fileName}`);
-      const folderName = `${userId}_${userName}_avatar`;
+      const folderName = `${type}_${userId}_${userName}`;
 
       try {
-        // Ensure the temporary directory exists
         await fs.promises.mkdir('/tmp', { recursive: true });
 
-        // Write the buffer to a temporary file
         await fs.promises.writeFile(tempFilePath, buffer);
 
-        // Upload the temporary file to Cloudinary
         const result = await cloudinary.uploader.upload(tempFilePath, {
-          public_id: 'avatar',
+          public_id: type + "_" + 'tempFilePath' + "_" + uuidv4(),
           folder: folderName
         });
 
@@ -46,7 +44,6 @@ export const uploadRouter = createTRPCRouter({
           throw new Error("Error: Upload failed");
         }
 
-        // Delete the temporary file
         await fs.promises.unlink(tempFilePath);
 
         return {

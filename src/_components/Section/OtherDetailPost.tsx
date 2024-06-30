@@ -19,7 +19,7 @@ const OtherDetailPost: FC<OtherDetailPostProps> = ({ data_user, id, session }) =
     data: data_postByUser,
     isLoading: isLoading_postByUser,
     error: error_postByUser,
-  } = api.post.getPostsPaginatedForTab.useQuery({ page: 1, pageSize: 5 });
+  } = api.post.getPostsByUserForTab.useQuery({ page: 1, pageSize: 5, userId: id });
   const {
     data: data_trending,
     isLoading: isLoading_trending,

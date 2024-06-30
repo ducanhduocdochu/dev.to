@@ -9,6 +9,8 @@ import UnicornIcon from "../Icon/PostDetailIcon/UnicornIcon";
 import ExplodingHeadIcon from "../Icon/PostDetailIcon/ExplodingHeadIcon";
 import RaiseHandIcon from "../Icon/PostDetailIcon/RaiseHandIcon";
 import FireIcon from "../Icon/PostDetailIcon/FireIcon";
+import { Session } from "next-auth";
+import { useRouter } from "next/router";
 
 export type detailPostType = {
   quantityComment: number;
@@ -20,7 +22,8 @@ export type detailPostType = {
   quantityFire: number;
 };
 
-const Reaction: FC<{detailPost:detailPostType}> = ({detailPost}) => {
+const Reaction: FC<{detailPost:detailPostType, session: Session | null | undefined}> = ({detailPost, session}) => {
+  const router = useRouter()
   const [showMenu, setShowMenu] = useState(false);
   const [iconColor, setIconColor] = useState("#525252");
 
@@ -33,6 +36,30 @@ const Reaction: FC<{detailPost:detailPostType}> = ({detailPost}) => {
     setIconColor("#525252");
     setShowMenu(false);
   };
+
+  const handleReation = (reactTypeId: number) => {
+    if (!session){
+      router.push("/enter").catch((error) => {
+        console.error("Error while navigating:", error);
+      });
+    }
+  } 
+
+  const handleComment = () => {
+    if (!session){
+      router.push("/enter").catch((error) => {
+        console.error("Error while navigating:", error);
+      });
+    }
+  } 
+
+  const handleSave = () => {
+    if (!session){
+      router.push("/enter").catch((error) => {
+        console.error("Error while navigating:", error);
+      });
+    }
+  } 
 
   return (
     <div className="flex w-[64px] flex-col items-center mt-[40px]">
@@ -53,11 +80,11 @@ const Reaction: FC<{detailPost:detailPostType}> = ({detailPost}) => {
         </p>
         {showMenu && (
           <div className="absolute bg-bg1 left-9 top-0 shadow-md px-2 py-2 rounded flex w-max rounded-[30px]">
-            <Button type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><HeartIcon size={36}/>{detailPost.quantityHeart}</Button>
-            <Button type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><UnicornIcon size={36}/>{detailPost.quantityUnicorn}</Button>
-            <Button type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><ExplodingHeadIcon size={36}/>{detailPost.quantityExploding}</Button>
-            <Button type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><RaiseHandIcon size={36}/>{detailPost.quantityRaiseHand}</Button>
-            <Button type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><FireIcon size={36}/>{detailPost.quantityFire}</Button>
+            <Button onClick={() => handleReation(1)} type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><HeartIcon size={36}/>{detailPost.quantityHeart}</Button>
+            <Button onClick={() => handleReation(2)} type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><UnicornIcon size={36}/>{detailPost.quantityUnicorn}</Button>
+            <Button onClick={() => handleReation(3)} type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><ExplodingHeadIcon size={36}/>{detailPost.quantityExploding}</Button>
+            <Button onClick={() => handleReation(4)} type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><RaiseHandIcon size={36}/>{detailPost.quantityRaiseHand}</Button>
+            <Button onClick={() => handleReation(5)} type="secondary" className="mx-2" classNameProp="flex-col items-center !p-2 h-max !rounded-[30px] hover:!bg-[#00000009]"><FireIcon size={36}/>{detailPost.quantityFire}</Button>
           </div>
         )}
       </div>
@@ -66,6 +93,7 @@ const Reaction: FC<{detailPost:detailPostType}> = ({detailPost}) => {
           type="secondary"
           classNameProp="w-10 h-10 items-center justify-center !p-0 hover:!fill-[#f59b05] hover:!bg-bg2"
           className=""
+          onClick={() => handleComment()}
         >
           <CommentIcon />
         </Button>
@@ -76,6 +104,7 @@ const Reaction: FC<{detailPost:detailPostType}> = ({detailPost}) => {
           type="secondary"
           classNameProp="w-10 h-10 items-center justify-center !p-0 hover:!fill-[#4f46e5] hover:!bg-bg2"
           className=""
+          onClick={() => handleSave()}
         >
           <SaveIcon />
         </Button>
