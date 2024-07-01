@@ -5,8 +5,6 @@ import { useRouter } from "next/router";
 import { api } from "@/utils/api";
 import React from "react";
 import TagPost from "@/_components/Section/TagPost";
-import Bar from "@/_components/Bar";
-import SkeletonList from "@/_components/SkeletonList";
 
 const TagPage: React.FC = () => {
   const router = useRouter();
@@ -16,7 +14,6 @@ const TagPage: React.FC = () => {
   const {
     data: data_tag,
     isLoading: isLoading_tag,
-    error: error_tag,
   } = api.tag.getTagById.useQuery({ tagId: idTag }); 
 
   const color = data_tag?.color;
@@ -40,9 +37,9 @@ const TagPage: React.FC = () => {
         </Box>
         </>
       ) : (
-        <div
-        >
-        Loading...</div>
+        <div>
+          Loading...
+        </div>
       )}
 
       <div className="px-2 mt-4 flex flex-col items-center">

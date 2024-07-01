@@ -24,10 +24,8 @@ interface BarProps {
   isChoose: boolean;
 }
 
-// Định nghĩa loại tùy chỉnh cho sort_direction
 type SortDirection = 'asc' | 'desc';
 
-// Hàm kiểm tra và chuyển đổi sort_direction thành giá trị hợp lệ
 const validateSortDirection = (sortDirection: string): SortDirection => {
   return sortDirection === 'asc' || sortDirection === 'desc' ? sortDirection : 'asc';
 };
@@ -35,7 +33,7 @@ const validateSortDirection = (sortDirection: string): SortDirection => {
 const updateLink = (
   link: string,
   filterType: string,
-  query: string
+  _query: string
 ) => {
   return link.replace(/class_name:\w+/, `class_name:${filterType}`);
 };
@@ -62,10 +60,10 @@ const handleSetItem = async (
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
-  const q = searchParams.get("q") || "";
-  const filters = searchParams.get("filters") || "";
-  const sort_by = searchParams.get("sort_by") || "";
-  const sort_direction = validateSortDirection(searchParams.get("sort_direction") || "");
+  const q = searchParams.get("q") ?? "";
+  const filters = searchParams.get("filters") ?? "";
+  const sort_by = searchParams.get("sort_by") ?? "";
+  const sort_direction = validateSortDirection(searchParams.get("sort_direction") ?? "");
 
   const router = useRouter();
 
@@ -124,13 +122,13 @@ export default function SearchPage() {
     );
   }, [currentFilter, q]);
 
-  const handleSortClick = (item: BarProps) => {
-    handleSetItem(item.link, item.id, sortOptions, setSortOptions, router);
+  const handleSortClick = async (item: BarProps) => {
+    await handleSetItem(item.link, item.id, sortOptions, setSortOptions, router);
   };
 
-  const handleFilterClick = (item: BarProps) => {
+  const handleFilterClick = async (item: BarProps) => {
     setCurrentFilter(item.title === "Posts" ? "Article" : "User");
-    handleSetItem(item.link, item.id, filterOptions, setFilterOptions, router);
+    await handleSetItem(item.link, item.id, filterOptions, setFilterOptions, router);
   };
 
   return (

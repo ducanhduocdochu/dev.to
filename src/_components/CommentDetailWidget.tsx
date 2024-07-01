@@ -9,7 +9,7 @@ const CommentDetailWidget: FC<{ session: Session | null | undefined, list_commen
   return (
     <div>
       {list_comment?.map((item) => 
-        <CommentDetail session = {session} comment = {item} level = {1} />
+        <CommentDetail key={item.id} session = {session} comment = {item} level = {1} />
       )}
     </div>
   );

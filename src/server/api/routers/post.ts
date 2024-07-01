@@ -4,6 +4,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
+import { Prisma } from "@prisma/client";
 
 export const postRouter = createTRPCRouter({
   getPostById: publicProcedure
@@ -226,7 +227,7 @@ export const postRouter = createTRPCRouter({
     const { page, pageSize, keyword, sort_direction } = input;
     const skip = (page - 1) * pageSize;
 
-    const whereCondition: any = {};
+    const whereCondition: Prisma.PostWhereInput = {};
 
     if (keyword) {
       whereCondition.OR = [

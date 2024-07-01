@@ -3,6 +3,7 @@ import {
   createTRPCRouter,
   publicProcedure,
 } from "@/server/api/trpc";
+import { Prisma } from '@prisma/client';
 
 export const userRouter = createTRPCRouter({
   getUserById: publicProcedure
@@ -14,7 +15,7 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
-    searchUsers: publicProcedure
+  searchUsers: publicProcedure
     .input(
       z.object({
         page: z.number().min(1),
@@ -27,7 +28,7 @@ export const userRouter = createTRPCRouter({
       const { page, pageSize, keyword, sort_direction } = input;
       const skip = (page - 1) * pageSize;
   
-      const whereCondition: any = {};
+      const whereCondition: Prisma.UserWhereInput = {};
   
       if (keyword) {
         whereCondition.OR = [

@@ -29,10 +29,9 @@ export function timeDifference(timestampStr: string): string {
 }
 
 export function extractPublicId(url: string): string {
-  // Match the pattern and extract the public ID
   const regex = /\/upload\/(?:v\d+\/)?(.+)\./;
   const match = url.match(regex);
-  if (match && match[1]) {
+  if (match?.[1]) {
     return match[1];
   } else {
     throw new Error("Invalid Cloudinary URL");

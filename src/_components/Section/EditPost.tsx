@@ -416,9 +416,9 @@ const EditPost: FC<{
     });
   }
 
-  const handleUnPublish = () => {
+  // const handleUnPublish = () => {
 
-  }
+  // }
 
   return (
     <div className="flex">
@@ -633,7 +633,7 @@ const EditPost: FC<{
                     type="secondary"
                     className=""
                     classNameProp="w-[110px] bg-button p-2 text-white w-[84px] hover:no- mt-[12px] hover:bg-[#2f3ab2]"
-                    onClick={handleUnPublish}
+                    // onClick={handleUnPublish}
                   >
                     Unpublish
                   </Button>
@@ -704,7 +704,7 @@ const EditPost: FC<{
                     type="secondary"
                     className=""
                     classNameProp="w-[110px] bg-button p-2 text-white w-[84px] hover:no-underline mt-[12px] hover:bg-[#2f3ab2]"
-                    onClick={handleUnPublish}
+                    // onClick={handleUnPublish}
                   >
                     Unpublish
                   </Button>
