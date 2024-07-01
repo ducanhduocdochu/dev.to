@@ -14,36 +14,31 @@ export default function TagsPage() {
     error: error_tag,
   } = api.tag.getAll.useQuery();
 
-  // const handleChooseTag = (tagId: number) => {
-  //   return data_tag.find((item) => item.id === tagId);
-  // };
-
   return (
     <div className="flex flex-col h-screen w-screen items-center justify-center bg-bg2">
       <Head>
         <title>Tags - DEV Community</title>
       </Head>
-      {data_tag &&
-        data_tag.map((tag) => (
-          <Button
-            key={tag.id}
-            type="secondary"
-            className="tag"
-            classNameProp={`h-max !text-[14px] !p-0 hover:no-underline`}
-            onClick={async () => {
-              try {
-                await router.push(`/t/${tag.id}`);
-              } catch (error) {
-                console.error("Failed to navigate:", error);
-              }
-              return null;
-            }}
-          >
-            <div className="h-[40px] w-[100px]">
-              <Tag tag={tag} />
-            </div>
-          </Button>
-        ))}
+      {data_tag?.map((tag) => (
+        <Button
+          key={tag.id}
+          type="secondary"
+          className="tag"
+          classNameProp={`h-max !text-[14px] !p-0 hover:no-underline`}
+          onClick={async () => {
+            try {
+              await router.push(`/t/${tag.id}`);
+            } catch (error) {
+              console.error("Failed to navigate:", error);
+            }
+            return null;
+          }}
+        >
+          <div className="h-[40px] w-[100px]">
+            <Tag tag={tag} />
+          </div>
+        </Button>
+      ))}
     </div>
   );
 }
