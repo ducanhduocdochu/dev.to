@@ -22,6 +22,9 @@ export const commentRouter = createTRPCRouter({
         data: {
           content, postId, parentId, userId
         },
+        include: {
+          reactions: true
+        }
       });
 
       return comment

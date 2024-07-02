@@ -1,4 +1,3 @@
-import { Session } from "next-auth";
 import { ChangeEvent, FC, useRef, useState } from "react";
 import { ButtonPostType } from "./Section/CreatePost";
 import BIcon from "./Icon/PostIcon/BIcon";
@@ -17,12 +16,23 @@ import Button from "./Button";
 import ThreeDotIcon from "./Icon/PostDetailIcon/ThreeDotIcon";
 import { useRouter } from "next/router";
 import PostDetailView from "./PostDetailView";
+import { Session } from "next-auth";
+import { CommentType } from "@/typeProp";
+import FullScreenLoader from "./Loading";
 
 interface UploadResponse {
   image_url: string;
 }
 
-const CommentInput: FC<{ session: Session | null | undefined, parentId: number | null, postId: number }> = ({ session, parentId, postId }) => {
+interface CommentInputProps {
+  session: Session | null | undefined;
+  parentId: number | null;
+  postId: number;
+  handleCommentAdd?: (newComment: CommentType) => void;
+  setIsOpenInput?: (isOpen: boolean) => void;
+}
+
+const CommentInput: FC<CommentInputProps> = ({ session, parentId, postId, handleCommentAdd, setIsOpenInput }) => {
   const router = useRouter()
   const [isFocused, setIsFocused] = useState(false);
   const contentRef = useRef<HTMLTextAreaElement>(null);
@@ -145,13 +155,13 @@ const CommentInput: FC<{ session: Session | null | undefined, parentId: number |
       id: 8,
       icon: CodeIcon,
       link: "",
-      onClick: () => handleInsertText(1, "``"),
+      onClick: () => handleInsertText(1, "`"),
     },
     {
       id: 9,
       icon: CodeBlockIcon,
       link: "",
-      onClick: () => handleInsertText(3, "``````"),
+      onClick: () => handleInsertText(3, "```"),
     },
     {
       id: 10,
@@ -210,27 +220,39 @@ const CommentInput: FC<{ session: Session | null | undefined, parentId: number |
     handleRemoveImageContent();
   };
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const handleSubmit = async () => {
     if (content.length > 0) {
+      setIsLoading(true)
       const response = await mutationM.mutateAsync({
-          content,
-          parentId,
-          postId
-        });
-        if (!response) {
-          return
-        }
-        setIsFocused(false)
-        setContent("")
-        // router.push(`${response?.userId}/${response?.postId}`).catch((error) => {
-        //   console.error("Error while navigating:", error);
-        // });
+        content,
+        parentId,
+        postId
+      });
+      setIsLoading(false)
+
+      if (!response) {
+        return;
       }
-    } 
+
+      if (handleCommentAdd) {
+        handleCommentAdd(response); 
+      }
+      
+      setIsFocused(false);
+      setContent("");
+
+      if (setIsOpenInput){
+        setIsOpenInput(false)
+      }
+    }
+  };
   
 
   return (
     <div className="mt-[24px] flex">
+      <FullScreenLoader loading={isLoading} />
       {session &&
       <img
         src={session?.user?.image ?? undefined}
@@ -247,8 +269,8 @@ const CommentInput: FC<{ session: Session | null | undefined, parentId: number |
       />
       <div className="flex w-full flex-col">
         <div className="w-full overflow-hidden overflow-hidden rounded-md border border-transparent focus-within:border focus-within:border-button focus-within:shadow-search">
-          {isEdit ? <textarea
-            className={`border-t-[rgb(23, 23, 23)] border-l-[rgb(23, 23, 23)] border-r-[rgb(23, 23, 23)] w-full border-l border-r border-t p-2 focus:border-transparent focus:outline-none ${isFocused ? "h-[128px]" : ""} mb-0`}
+          {isEdit ? 
+          <textarea className={`border-t-[rgb(23, 23, 23)] border-l-[rgb(23, 23, 23)] border-r-[rgb(23, 23, 23)] w-full border-l border-r border-t p-2 focus:border-transparent focus:outline-none ${isFocused ? "h-[128px]" : ""} mb-0`}
             placeholder="Add to the discussion"
             onFocus={handleFocus}
             onChange={handleContentChange}
@@ -302,7 +324,7 @@ const CommentInput: FC<{ session: Session | null | undefined, parentId: number |
         )}
       </div>
     </div>
-  );
+  )
 };
 
 export default CommentInput;

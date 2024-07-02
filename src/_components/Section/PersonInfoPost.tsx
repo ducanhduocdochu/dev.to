@@ -15,8 +15,8 @@ const PersonInfoPost: FC = () => {
 
   return (
     <div>
-      <div className='flex mb-4'><PostIcon /> <p className='text-[16px] text-[#404040]'>1 post published</p></div>
-      <div className='flex mb-4'><CommentIcon /> <p className='text-[16px] text-[#404040]'>1 comment written</p></div>
+      <div className='flex mb-4'><PostIcon /> <p className='text-[16px] text-[#404040]'>0 post published</p></div>
+      <div className='flex mb-4'><CommentIcon /> <p className='text-[16px] text-[#404040]'>0 comment written</p></div>
       <div className='flex'><TagIcon /> <p className='text-[16px] text-[#404040]'>0 tags followed</p></div>
     </div>
   );

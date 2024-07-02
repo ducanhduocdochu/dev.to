@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { FC } from "react";
+import { FC, useState } from "react";
 import Box from "@/_components/Box";
 import Button from "../Button";
 import Tag from "../Tag";
@@ -16,7 +16,7 @@ import PostDetailView from "../PostDetailView";
 import CommentInput from "../CommentInput";
 import CommentDetailWidget from "../CommentDetailWidget";
 import { api } from "@/utils/api";
-import { PostTypeDetail, TagPostType, TagType } from "@/typeProp";
+import { CommentType, PostTypeDetail, TagPostType, TagType } from "@/typeProp";
 import { timeDifference } from "@/utils";
 
 type PostDetailProps = {
@@ -33,6 +33,11 @@ const PostDetail: FC<PostDetailProps> = ({
   session,
 }) => {
   const router = useRouter();
+  const [comments, setComments] = useState<CommentType[]>(post.comments);
+
+  const handleCommentAdded = (newComment: CommentType) => {
+    setComments((prevComments) => [newComment, ...prevComments]);
+  };
   const {
     data: data_tag,
     isLoading: isLoading_tag,
@@ -87,9 +92,23 @@ const PostDetail: FC<PostDetailProps> = ({
                 />
               </Button>
               <div className="pl-[12px]">
+              <Button
+                type="secondary"
+                className=""
+                classNameProp="!p-0 h-max hover:!bg-[#f5f5f5] hover:no-underline"
+                onClick={async () => {
+                  try {
+                    await router.push(`/${post.createdById}`);
+                  } catch (error) {
+                    console.error("Failed to navigate:", error);
+                  }
+                  return null;
+                }}
+              >
                 <h2 className="text-[16px] font-medium text-text3">
                   {data_user.name}
                 </h2>
+                </Button>
                 <p className="text-[12px] text-text4">
                   {timeDifference(String(post.createdAt))}
                 </p>
@@ -207,8 +226,8 @@ const PostDetail: FC<PostDetailProps> = ({
             </Button>
           </div>
           {/* Input */}
-          <CommentInput session={session} parentId={null} postId={post.id} />
-          <CommentDetailWidget session={session} list_comment={post.comments} />
+          <CommentInput session={session} parentId={null} postId={post.id} handleCommentAdd = {handleCommentAdded} />
+          <CommentDetailWidget session={session} list_comment={comments}  />
         </div>
       </Box>
     </div>

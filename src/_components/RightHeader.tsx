@@ -59,6 +59,9 @@ const RightHeader: FC = () => {
                     type="secondary"
                     className=""
                     classNameProp="flex-col h-[56px] px-4 py-2"
+                    onClick={async () => {
+                      await router.push(`/${session.user.id}`);
+                    }}
                   >
                     <h1 className="text-[16px] font-medium text-button2">
                       {session.user.name}

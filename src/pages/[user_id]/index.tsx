@@ -47,11 +47,11 @@ const PersonalPage: React.FC = () => {
             <Box classNameProp="h-[263px] h-[100000px] bg-white">
                 <PersonInfo />
             </Box>
-            <div className="flex justify-between mt-4">
-                <Box classNameProp="w-[325.328px] h-max">
+            <div className="flex mt-4">
+                <Box classNameProp="w-[242.328px] h-max">
                     <PersonInfoPost />
                 </Box>
-                <div className="w-[650.672px] h-max">
+                <div className="w-[650.672px] ml-[32px] h-max">
                     <PersonPost/>
                 </div>
             </div>

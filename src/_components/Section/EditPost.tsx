@@ -624,7 +624,7 @@ const EditPost: FC<{
                   <Button
                     type="secondary"
                     className=""
-                    classNameProp="w-[110px] bg-button p-2 text-white w-[84px] hover:no-underline hover:bg-[#2f3ab2]"
+                    classNameProp="w-[120px] bg-button p-2 text-white w-[84px] hover:no-underline hover:bg-[#2f3ab2]"
                     onClick={handleDelete}
                   >
                     Delete
@@ -632,7 +632,7 @@ const EditPost: FC<{
                   <Button
                     type="secondary"
                     className=""
-                    classNameProp="w-[110px] bg-button p-2 text-white w-[84px] hover:no- mt-[12px] hover:bg-[#2f3ab2]"
+                    classNameProp="w-[120px] bg-button p-2 text-white w-[84px] hover:no- mt-[12px] hover:bg-[#2f3ab2]"
                     // onClick={handleUnPublish}
                   >
                     Unpublish
@@ -695,7 +695,7 @@ const EditPost: FC<{
                   <Button
                     type="secondary"
                     className=""
-                    classNameProp="w-[110px] bg-button p-2 text-white w-[84px] hover:no-underline hover:bg-[#2f3ab2]"
+                    classNameProp="w-[120px] bg-button p-2 text-white w-[84px] hover:no-underline hover:bg-[#2f3ab2]"
                     onClick={handleDelete}
                   >
                     Delete
@@ -703,7 +703,7 @@ const EditPost: FC<{
                   <Button
                     type="secondary"
                     className=""
-                    classNameProp="w-[110px] bg-button p-2 text-white w-[84px] hover:no-underline mt-[12px] hover:bg-[#2f3ab2]"
+                    classNameProp="w-[120px] bg-button p-2 text-white w-[84px] hover:no-underline mt-[12px] hover:bg-[#2f3ab2]"
                     // onClick={handleUnPublish}
                   >
                     Unpublish

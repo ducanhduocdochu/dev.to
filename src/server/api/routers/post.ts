@@ -18,6 +18,9 @@ export const postRouter = createTRPCRouter({
             include: {
               reactions: true,
               children: true
+            },
+            orderBy: {
+              createdAt: 'desc'
             }
           },
           tags: true,

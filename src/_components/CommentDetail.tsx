@@ -31,7 +31,20 @@ const CommentDetail: FC<{
     data: data_comment,
     isLoading: isLoading_comment,
     error: error_comment,
+    refetch: refetchComments,
   } = api.comment.getCommentByParentId.useQuery({ id: comment.id });
+
+  const [commentChildren, setCommentChildren] = useState<CommentType[]>([]);
+
+  useEffect(() => {
+    if (data_comment) {
+      setCommentChildren(data_comment);
+    }
+  }, [data_comment]);
+
+  const handleCommentAdded = (newComment: CommentType) => {
+    refetchComments();
+  };
 
   const handleLike = async () => {
     if (!session) {
@@ -63,7 +76,9 @@ const CommentDetail: FC<{
 
   useEffect(() => {
     if (session) {
-      const liked = comment.reactions.some((item) => item.userId === session.user.id);
+      const liked = comment.reactions.some(
+        (item) => item.userId === session.user.id,
+      );
       setIsLike(liked);
     }
   }, []);
@@ -73,18 +88,46 @@ const CommentDetail: FC<{
       <div className="mt-[36px] flex">
         {!isLoading_user && data_user ? (
           <>
-            <img
-              src={data_user?.image ?? undefined}
-              style={{ backgroundColor: "#dddddd" }}
-              className="mr-2 h-[32px] w-[32px] rounded-full focus:border-transparent focus:outline-none"
-              alt={data_user?.name ?? "User profile"}
-            />
+            <Button
+              onClick={async () => {
+                try {
+                  await router.push(`/${comment.userId}`);
+                } catch (error) {
+                  console.error("Failed to navigate:", error);
+                }
+                return null;
+              }}
+              type="secondary"
+              className=""
+              classNameProp="!p-0 h-max mr-2"
+            >
+              <img
+                src={data_user?.image ?? undefined}
+                style={{ backgroundColor: "#dddddd" }}
+                className="h-[32px] w-[32px] rounded-full focus:border-transparent focus:outline-none"
+                alt={data_user?.name ?? "User profile"}
+              />
+            </Button>
             <div>
               <Box classNameProp="flex w-full flex-col !p-[12px]">
                 <div className="flex items-center">
-                  <h1 className="p-1 text-[16px] font-medium">
-                    {data_user?.name}
-                  </h1>
+                  <Button
+                    type="secondary"
+                    className=""
+                    classNameProp="!p-0 h-max hover:!bg-[#f5f5f5] hover:no-underline"
+                    onClick={async () => {
+                      try {
+                        await router.push(`/${comment.userId}`);
+                      } catch (error) {
+                        console.error("Failed to navigate:", error);
+                      }
+                      return null;
+                    }}
+                  >
+                    <h1 className="p-1 text-[16px] font-medium">
+                      {data_user?.name}
+                    </h1>
+                  </Button>
                   <p className="mr-2 pb-[5px] text-[14px] font-extrabold text-[#bdbdbd]">
                     .
                   </p>
@@ -124,14 +167,20 @@ const CommentDetail: FC<{
           <div>Loading ...</div>
         )}
       </div>
-      {isOpenInput && 
+      {isOpenInput && (
         <div>
-          <CommentInput session={session} parentId={comment.id} postId={comment.postId} />
+          <CommentInput
+            session={session}
+            parentId={comment.id}
+            postId={comment.postId}
+            handleCommentAdd={handleCommentAdded}
+            setIsOpenInput={setIsOpenInput}
+          />
         </div>
-      }
+      )}
       {!isLoading_comment && data_comment && data_comment.length > 0 && (
         <div className="ml-10">
-          {data_comment.map((childComment) => (
+          {commentChildren.map((childComment) => (
             <CommentDetail
               key={childComment.id}
               session={session}

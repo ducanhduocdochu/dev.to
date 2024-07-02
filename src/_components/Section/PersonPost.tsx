@@ -1,12 +1,12 @@
-import { FC } from 'react';
-import Bar from '@/_components/Bar';
-import PostWidgets from '@/_components/PostWidgets';
-import ImpressionWidget from '@/_components/ImpressionWidget';
-import { api } from '@/utils/api';
-import { PostTypeBody } from '@/typeProp';
-import { useRouter } from 'next/router';
-import Post from '../Post';
-import SkeletonList from '../SkeletonList';
+import { FC } from "react";
+import Bar from "@/_components/Bar";
+import PostWidgets from "@/_components/PostWidgets";
+import ImpressionWidget from "@/_components/ImpressionWidget";
+import { api } from "@/utils/api";
+import { PostTypeBody } from "@/typeProp";
+import { useRouter } from "next/router";
+import Post from "../Post";
+import SkeletonList from "../SkeletonList";
 
 const PersonPost: FC = () => {
   const router = useRouter();
@@ -17,7 +17,11 @@ const PersonPost: FC = () => {
     data: data_posts,
     isLoading: isLoading_posts,
     error: error_posts,
-  } = api.post.getPostsByUserForBody.useQuery({ page: 1, pageSize: 10, createById: userId });
+  } = api.post.getPostsByUserForBody.useQuery({
+    page: 1,
+    pageSize: 10,
+    createById: userId,
+  });
 
   const posts: PostTypeBody[] = data_posts?.posts ?? [];
 
@@ -29,10 +33,26 @@ const PersonPost: FC = () => {
 
   return (
     <div>
-      {posts.length > 0 && !isLoading_posts ? 
-      posts.map((item: PostTypeBody) => {
-        return <Post key={item.id} postDetail={item} data_tag={data_tag ?? []} isComment = {false} />;
-      }) : <SkeletonList x={1} width="w-[200px]" height="h-3" />}
+      {!isLoading_posts ? (
+        <div>
+          {posts.length > 0 ? (
+            posts.map((item: PostTypeBody) => {
+              return (
+                <Post
+                  key={item.id}
+                  postDetail={item}
+                  data_tag={data_tag ?? []}
+                  isComment={false}
+                />
+              );
+            })
+          ) : (
+            <div></div>
+          )}
+        </div>
+      ) : (
+        <SkeletonList x={1} width="w-[700px]" height="h-3" />
+      )}
     </div>
   );
 };

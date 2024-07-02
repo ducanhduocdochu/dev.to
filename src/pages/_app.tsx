@@ -9,6 +9,7 @@ import "@/styles/globals.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Progress from "@/_components/Progress";
+import { WebSocketProvider } from "@/context/WebSocketContext";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -37,14 +38,16 @@ const MyApp: AppType<{ session: Session | null }> = ({
 
   return (
     <SessionProvider session={session}>
-      <Head>
-        <link rel="icon" href="https://res.cloudinary.com/practicaldev/image/fetch/s--E8ak4Hr1--/c_limit,f_auto,fl_progressive,q_auto,w_32/https://dev-to.s3.us-east-2.amazonaws.com/favicon.ico" />
-        <title>DEV Community</title>
-      </Head>
-      <main>
-        <Progress isAnimating={isAnimating} />
-        <Component {...pageProps} />
-      </main>
+      <WebSocketProvider>
+        <Head>
+          <link rel="icon" href="https://res.cloudinary.com/practicaldev/image/fetch/s--E8ak4Hr1--/c_limit,f_auto,fl_progressive,q_auto,w_32/https://dev-to.s3.us-east-2.amazonaws.com/favicon.ico" />
+          <title>DEV Community</title>
+        </Head>
+        <main>
+          <Progress isAnimating={isAnimating} />
+          <Component {...pageProps} />
+        </main>
+      </WebSocketProvider>
     </SessionProvider>
   );
 };
