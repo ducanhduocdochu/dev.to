@@ -4,11 +4,13 @@ import { signOut, useSession } from "next-auth/react";
 import NotificationIcon from "@/_components/Icon/NotificationIcon";
 import Box from "./Box";
 import { useRouter } from "next/router";
+import { useWebSocket } from "@/context/WebSocketContext";
 
 const RightHeader: FC = () => {
   const { data: session, status } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
+  const { notificationCount } = useWebSocket();
 
   const handleButtonClick = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -36,7 +38,14 @@ const RightHeader: FC = () => {
               await router.push('/notifications');
             }}
           >
-            <NotificationIcon />
+            <div className="relative">
+              <NotificationIcon />
+              {notificationCount > 0 && (
+                <span className="absolute top-[-12px] right-[-12px] inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                  {notificationCount}
+                </span>
+              )}
+            </div>
           </Button>
           <div className="relative">
             <Button

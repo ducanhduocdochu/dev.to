@@ -19,6 +19,7 @@ import PostDetailView from "./PostDetailView";
 import { Session } from "next-auth";
 import { CommentType } from "@/typeProp";
 import FullScreenLoader from "./Loading";
+import { useWebSocket } from "@/context/WebSocketContext";
 
 interface UploadResponse {
   image_url: string;
@@ -28,11 +29,12 @@ interface CommentInputProps {
   session: Session | null | undefined;
   parentId: number | null;
   postId: number;
+  userId: string;
   handleCommentAdd?: (newComment: CommentType) => void;
   setIsOpenInput?: (isOpen: boolean) => void;
 }
 
-const CommentInput: FC<CommentInputProps> = ({ session, parentId, postId, handleCommentAdd, setIsOpenInput }) => {
+const CommentInput: FC<CommentInputProps> = ({ session, parentId, postId, handleCommentAdd, setIsOpenInput, userId }) => {
   const router = useRouter()
   const [isFocused, setIsFocused] = useState(false);
   const contentRef = useRef<HTMLTextAreaElement>(null);
@@ -41,6 +43,7 @@ const CommentInput: FC<CommentInputProps> = ({ session, parentId, postId, handle
   const [isEdit, setIsEdit] = useState<boolean>(true);
   const mutation = api.upload.uploadImage.useMutation();
   const mutationM = api.comment.createComment.useMutation();
+  const { sendEvent, sendNotification } = useWebSocket();
 
   const handleFocus = () => {
     if (!session){
@@ -231,6 +234,9 @@ const CommentInput: FC<CommentInputProps> = ({ session, parentId, postId, handle
         postId
       });
       setIsLoading(false)
+
+      sendEvent({timestamp: new Date() ,postId: postId , type: "comment"})
+      sendNotification({userId: userId, message: `Replied to your comment or left a comment in your post: \n${content}`})
 
       if (!response) {
         return;

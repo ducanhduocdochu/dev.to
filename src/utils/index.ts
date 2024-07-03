@@ -37,3 +37,13 @@ export function extractPublicId(url: string): string {
     throw new Error("Invalid Cloudinary URL");
   }
 }
+
+export function splitStringAtColon(str: string): [string, string] {
+  const index = str.indexOf(':');
+  if (index === -1) {
+    return [str, ''];
+  }
+  const part1 = str.substring(0, index + 1);
+  const part2 = str.substring(index + 1).trim();
+  return [part1, part2];
+}

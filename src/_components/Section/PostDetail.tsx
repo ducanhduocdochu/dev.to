@@ -226,7 +226,7 @@ const PostDetail: FC<PostDetailProps> = ({
             </Button>
           </div>
           {/* Input */}
-          <CommentInput session={session} parentId={null} postId={post.id} handleCommentAdd = {handleCommentAdded} />
+          <CommentInput session={session} parentId={null} postId={post.id} handleCommentAdd = {handleCommentAdded} userId = {post.createdById} />
           <CommentDetailWidget session={session} list_comment={comments}  />
         </div>
       </Box>

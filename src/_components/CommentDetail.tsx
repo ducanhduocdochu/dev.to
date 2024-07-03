@@ -10,12 +10,15 @@ import PostDetailView from "@/_components/PostDetailView";
 import { api } from "@/utils/api";
 import CommentInput from "@/_components/CommentInput";
 import { useRouter } from "next/router";
+import FullScreenLoader from "./Loading";
+import { useWebSocket } from "@/context/WebSocketContext";
 
 const CommentDetail: FC<{
   session: Session | null | undefined;
   comment: CommentType;
   level: number;
 }> = ({ session, comment, level }) => {
+  const { sendEvent, sendNotification } = useWebSocket();
   const router = useRouter();
   const [isOpenInput, setIsOpenInput] = useState<boolean>(false);
   const [isLike, setIsLike] = useState<boolean>(false);
@@ -46,6 +49,8 @@ const CommentDetail: FC<{
     refetchComments();
   };
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const handleLike = async () => {
     if (!session) {
       router.push("/enter").catch((error) => {
@@ -53,10 +58,13 @@ const CommentDetail: FC<{
       });
       return;
     }
-
+    setIsLoading(true)
     const response = await mutationM.mutateAsync({
       commentId: comment.id,
     });
+    setIsLoading(false)
+
+    sendNotification({userId: comment.userId, message: `Liked your comment: \n${comment.content}`})
 
     if (response) {
       setIsLike(response.isCreate);
@@ -85,6 +93,7 @@ const CommentDetail: FC<{
 
   return (
     <div>
+      <FullScreenLoader loading={isLoading} />
       <div className="mt-[36px] flex">
         {!isLoading_user && data_user ? (
           <>
@@ -175,6 +184,7 @@ const CommentDetail: FC<{
             postId={comment.postId}
             handleCommentAdd={handleCommentAdded}
             setIsOpenInput={setIsOpenInput}
+            userId={comment.userId}
           />
         </div>
       )}

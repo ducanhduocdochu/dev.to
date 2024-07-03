@@ -29,6 +29,7 @@ model Post {
   createdBy   User     @relation(fields: [createdById], references: [id])
   createdById String
   tags        PostTags[]
+  interactions Interacts[]  // Add reverse relation field
 
   @@index([title])
 }
@@ -75,11 +76,13 @@ model ReactionComment {
 }
 
 model Save {
-  id     Int    @id @default(autoincrement())
   userId String
   postId Int
 
   post   Post   @relation(fields: [postId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, postId])
 }
 
 model Account {
@@ -108,14 +111,20 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  posts         Post[]
+  id                    String    @id @default(cuid())
+  name                  String?
+  email                 String?   @unique
+  emailVerified         DateTime?
+  image                 String?
+  accounts              Account[]
+  sessions              Session[]
+  posts                 Post[]
+  saves                 Save[]
+  sentNotifications     Notifications[] @relation(name: "SentNotifications")
+  receivedNotifications Notifications[] @relation(name: "ReceivedNotifications")
+  interactions          Interacts[]
+
+  @@index([email])
 }
 
 model VerificationToken {
@@ -134,4 +143,26 @@ model PostTags {
   tag  Tag  @relation(fields: [tagId], references: [id])
 
   @@id([postId, tagId])
+}
+
+model Notifications {
+  id          Int    @id @default(autoincrement())
+  senderId    String
+  receivedId  String
+  message     String
+  seen        Boolean
+
+  sender      User   @relation(name: "SentNotifications", fields: [senderId], references: [id], onDelete: Cascade)
+  received    User   @relation(name: "ReceivedNotifications", fields: [receivedId], references: [id], onDelete: Cascade)
+}
+
+model Interacts {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  postId    Int
+  type      String
+  timestamp DateTime     
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id])
 }

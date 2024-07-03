@@ -442,45 +442,4 @@ export const postRouter = createTRPCRouter({
       };
     }),
 
-
-  // getPosts
-
-  //   getPostsByTag: publicProcedure
-  //     .input(z.object({ tagName: z.string() }))
-  //     .query(async ({ ctx, input }) => {
-  //       return ctx.db.post.findMany({
-  //         where: {
-  //           tags: {
-  //             some: {
-  //               name: input.tagName,
-  //             },
-  //           },
-  //         },
-  //         orderBy: { createdAt: "desc" },
-  //         include: {
-  //           createdBy: true,
-  //           comments: true,
-  //           tags: true,
-  //         },
-  //       });
-  //     }),
-
-  //   searchPosts: publicProcedure
-  //     .input(z.object({ query: z.string() }))
-  //     .query(async ({ ctx, input }) => {
-  //       return ctx.db.post.findMany({
-  //         where: {
-  //           OR: [
-  //             { title: { contains: input.query, mode: 'insensitive' } },
-  //             { content: { contains: input.query, mode: 'insensitive' } },
-  //           ],
-  //         },
-  //         orderBy: { createdAt: "desc" },
-  //         include: {
-  //           createdBy: true,
-  //           comments: true,
-  //           tags: true,
-  //         },
-  //       });
-  //     }),
 });

@@ -32,7 +32,8 @@ export const env = createEnv({
     AWS_BUCKET_REGION: z.string(),
     CLOUDINARY_CLOUD_NAME: z.string(),
     CLOUDINARY_API_KEY: z.string(),
-    CLOUDINARY_API_SECRET: z.string()
+    CLOUDINARY_API_SECRET: z.string(),
+    URL_WEBSOCKET: z.string()
   },
 
   /**
@@ -63,7 +64,8 @@ export const env = createEnv({
     AWS_BUCKET_SECRET_KEY: process.env.AWS_BUCKET_SECRET_KEY,
     CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
     CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
-    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET
+    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
+    URL_WEBSOCKET: process.env.URL_WEBSOCKET,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

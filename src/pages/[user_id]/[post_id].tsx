@@ -8,10 +8,12 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import SkeletonList from "@/_components/SkeletonList";
+import { useWebSocket } from "@/context/WebSocketContext";
 
 export default function PostPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { sendEvent } = useWebSocket();
   const { user_id, post_id } = router.query;
 
   const postId = Number(post_id);
@@ -26,6 +28,10 @@ export default function PostPage() {
       }
     }
   }, [postId, status, router]);
+
+  useEffect(() => {
+    sendEvent({timestamp: new Date() ,postId: postId , type: "view"})
+  }, []);
 
   const {
     data: data_post,

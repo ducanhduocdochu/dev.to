@@ -4,6 +4,14 @@ export interface TagType {
   color: string;
 }
 
+export interface NotificationType {
+  id: number;
+  senderId: string;
+  receivedId: string;
+  message: string;
+  seen: boolean;
+}
+
 export interface CommentType {
   id: number;
   content: string;
