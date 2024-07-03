@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Test</title>
+</head>
+<body>
+  <h1>WebSocket Test</h1>
+  <input type="text" id="token" placeholder="Enter your token" />
+  <button id="connectBtn">Connect</button>
+  <button id="disconnectBtn">Disconnect</button>
+  <div id="status"></div>
+  <div id="messages"></div>
+
+  <script>
+    let ws;
+    const status = document.getElementById('status');
+    const messages = document.getElementById('messages');
+
+    document.getElementById('connectBtn').onclick = () => {
+      const token = document.getElementById('token').value;
+      const wsUrl = 'wss://devto-socket.railway.internal:8080';
+
+      ws = new WebSocket(`${wsUrl}?token=${token}`);
+
+      ws.onopen = () => {
+        status.textContent = 'Connected';
+        console.log('Connected to WebSocket server');
+      };
+
+      ws.onmessage = (event) => {
+        const message = document.createElement('div');
+        message.textContent = `Received: ${event.data}`;
+        messages.appendChild(message);
+        console.log('Received message:', event.data);
+      };
+
+      ws.onclose = () => {
+        status.textContent = 'Disconnected';
+        console.log('Disconnected from WebSocket server');
+      };
+
+      ws.onerror = (error) => {
+        status.textContent = 'Error';
+        console.error('WebSocket error:', error);
+      };
+    };
+
+    document.getElementById('disconnectBtn').onclick = () => {
+      if (ws) {
+        ws.close();
+      }
+    };
+  </script>
+</body>
+</html>
