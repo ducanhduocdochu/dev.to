@@ -125,7 +125,6 @@ export interface FireReactionType {
 }
 
 export interface SaveType {
-  id: number;
   userId: string;
   postId: number;
 }
