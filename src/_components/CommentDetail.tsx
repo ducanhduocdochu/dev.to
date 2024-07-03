@@ -58,19 +58,23 @@ const CommentDetail: FC<{
       });
       return;
     }
-    setIsLoading(true)
+    setIsLoading(true);
     const response = await mutationM.mutateAsync({
       commentId: comment.id,
     });
-    setIsLoading(false)
-
-    sendNotification({userId: comment.userId, message: `Liked your comment: \n${comment.content}`})
-
+    setIsLoading(false);
+  
+    sendNotification({
+      userId: comment.userId,
+      message: `Liked your comment: \n${comment.content}`
+    });
+  
     if (response) {
       setIsLike(response.isCreate);
       setLikeCount((prev) => (response.isCreate ? prev + 1 : prev - 1));
     }
   };
+  
 
   const handleReply = () => {
     if (!session) {

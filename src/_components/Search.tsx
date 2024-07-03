@@ -42,7 +42,11 @@ const Search: FC = () => {
 
   const handleSearch = async () => {
     if (debouncedSearchTerm.trim() !== "") {
-      await router.push(`search?q=${debouncedSearchTerm}&filters=class_name:Article`);
+      try {
+        await router.push(`search?q=${debouncedSearchTerm}&filters=class_name:Article`);
+      } catch (error) {
+        console.error("Error during navigation:", error);
+      }
     }
   };
 
@@ -58,8 +62,8 @@ const Search: FC = () => {
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      refetch_posts();
-      refetch_users();
+      refetch_posts().catch(error => console.error("Error refetching posts:", error));
+      refetch_users().catch(error => console.error("Error refetching users:", error));
     }
   }, [debouncedSearchTerm, refetch_posts, refetch_users]);
 

@@ -58,16 +58,15 @@ const PostWidgets: FC = () => {
           if (index === posts.length - 1) {
             return (
               <div key={item.id} ref={lastPostRef}>
-                <Post postDetail={item} data_tag={data_tag ?? []} isComment={true} />
+                <Post postDetail={item} data_tag={data_tag || []} isComment={true} />
               </div>
             );
           } else {
             return (
-              <Post key={item.id} postDetail={item} data_tag={data_tag ?? []} isComment={true} />
+              <Post key={item.id} postDetail={item} data_tag={data_tag || []} isComment={true} />
             );
           }
         })
-        
       ) : (
         isLoading ? (
           <SkeletonList x={1} width="w-[685.328px]" height="h-3" />
