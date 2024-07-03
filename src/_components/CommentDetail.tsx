@@ -53,9 +53,11 @@ const CommentDetail: FC<{
 
   const handleLike = async () => {
     if (!session) {
-      router.push("/enter").catch((error) => {
+      try {
+        await router.push("/enter");
+      } catch (error) {
         console.error("Error while navigating:", error);
-      });
+      }
       return;
     }
     setIsLoading(true);
@@ -64,10 +66,7 @@ const CommentDetail: FC<{
     });
     setIsLoading(false);
   
-    sendNotification({
-      userId: comment.userId,
-      message: `Liked your comment: \n${comment.content}`
-    });
+    sendNotification({ userId: comment.userId, message: `Liked your comment: \n${comment.content}` });
   
     if (response) {
       setIsLike(response.isCreate);
@@ -75,12 +74,13 @@ const CommentDetail: FC<{
     }
   };
   
-
-  const handleReply = () => {
+  const handleReply = async () => {
     if (!session) {
-      router.push("/enter").catch((error) => {
+      try {
+        await router.push("/enter");
+      } catch (error) {
         console.error("Error while navigating:", error);
-      });
+      }
       return;
     }
     setIsOpenInput(!isOpenInput);
