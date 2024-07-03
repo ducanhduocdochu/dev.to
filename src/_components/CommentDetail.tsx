@@ -45,8 +45,8 @@ const CommentDetail: FC<{
     }
   }, [data_comment]);
 
-  const handleCommentAdded = (newComment: CommentType) => {
-    refetchComments();
+  const handleCommentAdded = async (newComment: CommentType) => {
+    await refetchComments();
   };
 
   const [isLoading, setIsLoading] = useState<boolean>(false);

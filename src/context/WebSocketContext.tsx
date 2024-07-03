@@ -33,7 +33,7 @@ export const WebSocketProvider: React.FC<{ children: ReactNode }> = ({ children 
   const { data: data_notifications, isLoading: isLoading_notifications } = api.notification.getSeenNotificationByUserId.useQuery();
 
   const handleMessage = useCallback((event: MessageEvent) => {
-    setLastMessage(event.data);
+    setLastMessage(event.data as string);
     setNotificationCount((prevCount) => prevCount + 1);
   }, []);
 
